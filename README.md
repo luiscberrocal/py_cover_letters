@@ -10,6 +10,8 @@
 
 Project to create, manage and email cover letters.
 
+This app will only run in linux and Mac OS. I'm not sure it will run in Windows.
+
 
 * Documentation: <https://luiscberrocal.github.io/py-cover-letters>
 * GitHub: <https://github.com/luiscberrocal/py-cover-letters>
