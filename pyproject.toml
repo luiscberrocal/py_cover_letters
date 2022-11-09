@@ -49,6 +49,7 @@ toml = {version = "^0.10.2", optional = true}
 bump2version = {version = "^1.0.1", optional = true}
 docxtpl = "^0.16.4"
 openpyxl = "^3.0.10"
+sqlmodel = "^0.0.8"
 
 [tool.poetry.extras]
 test = [
