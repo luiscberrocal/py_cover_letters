@@ -31,16 +31,17 @@ def simple_write_to_excel(filename: Path, headers: Dict[str, Any], lines: List[D
 
 COLUMN_MAPPING = {
     0: 'company_name',
-    1: 'position_name',
-    2: 'greeting',
-    3: 'to_email',
-    4: 'cover_template',
-    5: 'date_sent_via_email',
-    6: 'date_generated'
+    1: 'company_name',
+    2: 'position_name',
+    3: 'greeting',
+    4: 'to_email',
+    5: 'cover_template',
+    6: 'date_sent_via_email',
+    7: 'date_generated'
 }
 
 
-class CoverLetterManager:
+class ExcelCoverLetterManager:
 
     def __init__(self, filename: Path, column_mapping: Dict[int, str], sheet_name: str = 'Cover letters'):
         self.filename = filename
@@ -63,3 +64,7 @@ class CoverLetterManager:
         row += 1
 
         wb.save(self.filename)
+
+    def read(self):
+        pass
+    
