@@ -1,0 +1,3 @@
+
+class CoverLetterException(Exception):
+    pass
