@@ -76,6 +76,9 @@ doc = [
 [tool.poetry.scripts]
 py-cover-letters = 'py_cover_letters.cli:main'
 
+[tool.poetry.group.dev.dependencies]
+factory-boy = "^3.2.1"
+
 [tool.black]
 line-length = 120
 skip-string-normalization = true

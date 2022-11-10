@@ -1,8 +1,10 @@
 from pathlib import Path
 from typing import Dict, Any, List
 
+from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
 
+from .managers import CoverLetterManager
 from ..exceptions import CoverLetterException
 
 
@@ -43,11 +45,13 @@ COLUMN_MAPPING = {
 
 class ExcelCoverLetterManager:
 
-    def __init__(self, filename: Path, column_mapping: Dict[int, str], sheet_name: str = 'Cover letters'):
+    def __init__(self, filename: Path, column_mapping: Dict[int, str], db_manager: CoverLetterManager,
+                 sheet_name: str = 'Cover letters'):
         self.filename = filename
         self.column_mapping = column_mapping
         self.columns = [col_name for _, col_name in self.column_mapping.items()]
         self.sheet_name = sheet_name
+        self.db_manager = db_manager
 
     def write_template(self):
         if self.filename.exists():
@@ -66,5 +70,6 @@ class ExcelCoverLetterManager:
         wb.save(self.filename)
 
     def read(self):
-        pass
-    
+        wb = load_workbook(self.filename)
+        sheet = wb[self.sheet_name]
+

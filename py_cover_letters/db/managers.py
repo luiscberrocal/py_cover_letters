@@ -5,7 +5,7 @@ from sqlmodel import create_engine, SQLModel, Session, select
 from py_cover_letters.db.models import CoverLetter
 
 
-class CoverLetterProjectManager:
+class CoverLetterManager:
 
     def __init__(self, sql_file: Path):
         self.engine = create_engine(f'sqlite:///{sql_file}')
