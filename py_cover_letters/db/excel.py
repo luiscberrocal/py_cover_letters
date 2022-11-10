@@ -5,6 +5,7 @@ from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
 
 from .managers import CoverLetterManager
+from .models import CoverLetter
 from ..exceptions import CoverLetterException
 
 
@@ -32,20 +33,20 @@ def simple_write_to_excel(filename: Path, headers: Dict[str, Any], lines: List[D
 
 
 COLUMN_MAPPING = {
-    0: 'company_name',
-    1: 'company_name',
-    2: 'position_name',
-    3: 'greeting',
-    4: 'to_email',
-    5: 'cover_template',
-    6: 'date_sent_via_email',
-    7: 'date_generated'
+    1: 'id',
+    2: 'company_name',
+    3: 'position_name',
+    4: 'greeting',
+    5: 'to_email',
+    6: 'cover_template',
+    7: 'date_sent_via_email',
+    8: 'date_generated'
 }
 
 
 class ExcelCoverLetterManager:
 
-    def __init__(self, filename: Path, column_mapping: Dict[int, str], db_manager: CoverLetterManager,
+    def __init__(self, filename: Path, column_mapping: Dict[int, str], db_manager: CoverLetterManager = None,
                  sheet_name: str = 'Cover letters'):
         self.filename = filename
         self.column_mapping = column_mapping
@@ -73,3 +74,13 @@ class ExcelCoverLetterManager:
         wb = load_workbook(self.filename)
         sheet = wb[self.sheet_name]
 
+    def add(self, cover_letters: List[CoverLetter]):
+        wb = load_workbook(self.filename)
+        sheet = wb[self.sheet_name]
+        row = sheet.max_row + 1
+        for cover_letter in cover_letters:
+            for col, attribute_name in self.column_mapping.items():
+                value = getattr(cover_letter, attribute_name)
+                sheet.cell(row=row, column=col, value=value)
+            row += 1
+        wb.save(self.filename)

@@ -1,9 +1,6 @@
+from factory import Factory
 from factory import LazyAttribute, Trait
-from factory import Sequence, Factory, Iterator
-from factory import SubFactory
 from factory import lazy_attribute
-from factory.django import DjangoModelFactory
-from factory.fuzzy import FuzzyText
 from faker import Factory as FakerFactory
 
 from py_cover_letters.db.models import CoverLetter
@@ -11,12 +8,33 @@ from py_cover_letters.db.models import CoverLetter
 faker = FakerFactory.create()
 from pytz import timezone
 
-TIME_ZONE = 'America/Panama'
+TIME_ZONE = None  # 'America/Panama'
 
 
 class CoverLetterFactory(Factory):
     class Meta:
         model = CoverLetter
 
-    timestamp_paid = LazyAttribute(lambda x: faker.date_time_between(start_date="-1m",
-                                                                     end_date="now", tzinfo=timezone(TIME_ZONE)))
+    class Params:
+        new = Trait(
+            id=None,
+            date_generated=None
+        )
+        no_email = Trait(
+            to_email=None
+        )
+
+    id = LazyAttribute(lambda x: faker.random_int(min=100))
+    company_name = LazyAttribute(lambda x: faker.company())
+    position_name = LazyAttribute(lambda x: faker.job())
+    greeting = 'Dear Hiring manager'
+    to_email = LazyAttribute(lambda x: faker.email())
+    cover_template = 'Cover Letter Template.docx'
+    date_generated = LazyAttribute(lambda x: faker.date_time_between(start_date="-1m",
+                                                                     end_date="now", tzinfo=None))
+    description = 'New position'
+    sync = True
+
+    @lazy_attribute
+    def date_sent_via_email(self):
+        return self.date_generated
