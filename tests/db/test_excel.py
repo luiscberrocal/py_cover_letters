@@ -20,3 +20,7 @@ class TestExcelCoverManager:
         assert filename.exists()
         cover_letters = CoverLetterFactory.create_batch(5)
         excel_manager.add(cover_letters)
+
+        read_cl = excel_manager.read()
+        assert len(read_cl) == 5
+        print(read_cl)

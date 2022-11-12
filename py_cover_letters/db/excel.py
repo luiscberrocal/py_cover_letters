@@ -46,13 +46,12 @@ COLUMN_MAPPING = {
 
 class ExcelCoverLetterManager:
 
-    def __init__(self, filename: Path, column_mapping: Dict[int, str], db_manager: CoverLetterManager = None,
+    def __init__(self, filename: Path, column_mapping: Dict[int, str],
                  sheet_name: str = 'Cover letters'):
         self.filename = filename
         self.column_mapping = column_mapping
         self.columns = [col_name for _, col_name in self.column_mapping.items()]
         self.sheet_name = sheet_name
-        self.db_manager = db_manager
 
     def write_template(self):
         if self.filename.exists():
@@ -70,9 +69,24 @@ class ExcelCoverLetterManager:
 
         wb.save(self.filename)
 
-    def read(self):
+    def read(self) -> List[CoverLetter]:
+        cover_letters = list()
         wb = load_workbook(self.filename)
         sheet = wb[self.sheet_name]
+        last_row = sheet.max_row + 1
+        for row in range(2, last_row):
+            cover_letter_dict = dict()
+            for col, name in self.column_mapping.items():
+                cell_obj = sheet.cell(row=row, column=col)
+                value = cell_obj.value
+                cover_letter_dict[name] = value
+            try:
+                cover_letter = CoverLetter(**cover_letter_dict)
+                cover_letters.append(cover_letter)
+            except Exception as e:
+                error_message = f'Unexpected error on row {row}. Type: {e.__class__.__name__} Error: {e}'
+                raise CoverLetterException(error_message)
+        return cover_letters
 
     def add(self, cover_letters: List[CoverLetter]):
         wb = load_workbook(self.filename)
