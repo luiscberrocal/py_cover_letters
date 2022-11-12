@@ -18,6 +18,13 @@ class CoverLetterManager:
 
             return project_result
 
+    def get(self, cover_letter_id: int) -> CoverLetter:
+        with Session(self.engine) as session:
+            statement = select(CoverLetter).where(CoverLetter.id == cover_letter_id)
+            results = session.exec(statement)
+            db_project = results.one()
+        return db_project
+
     def create(self, cover_letter: CoverLetter):
         with Session(self.engine) as session:
             session.add(cover_letter)
@@ -51,10 +58,14 @@ def synchronize(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterM
     excel_cover_letters = excel_manager.read()
     updated_list = list()
     mark_for_no_sync = list()
-    added_list = list()
+    created_list = list()
     for cover_letter in excel_cover_letters:
         if cover_letter.id is None:
             db_manager.create(cover_letter)
-            added_list.append(cover_letter)
+            created_list.append(cover_letter)
         else:
-            pass
+            db_cover_letter = db_manager.get(cover_letter.id)
+            if db_cover_letter != cover_letter:
+                db_manager.update(cover_letter)
+                updated_list.append(cover_letter)
+    return created_list, updated_list, mark_for_no_sync
