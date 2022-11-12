@@ -2,7 +2,8 @@ from pathlib import Path
 
 from sqlmodel import create_engine, SQLModel, Session, select
 
-from py_cover_letters.db.models import CoverLetter
+from .excel import ExcelCoverLetterManager
+from .models import CoverLetter
 
 
 class CoverLetterManager:
@@ -17,10 +18,12 @@ class CoverLetterManager:
 
             return project_result
 
-    def create(self, project: CoverLetter):
+    def create(self, cover_letter: CoverLetter):
         with Session(self.engine) as session:
-            session.add(project)
+            session.add(cover_letter)
             session.commit()
+            session.refresh(cover_letter)
+        return cover_letter
 
     def update(self, project: CoverLetter):
         with Session(self.engine) as session:
@@ -42,3 +45,16 @@ class CoverLetterManager:
             statement = select(CoverLetter)
             projects = session.exec(statement).all()
             return projects
+
+
+def synchronize(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterManager):
+    excel_cover_letters = excel_manager.read()
+    updated_list = list()
+    mark_for_no_sync = list()
+    added_list = list()
+    for cover_letter in excel_cover_letters:
+        if cover_letter.id is None:
+            db_manager.create(cover_letter)
+            added_list.append(cover_letter)
+        else:
+            pass

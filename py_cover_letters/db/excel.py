@@ -4,33 +4,8 @@ from typing import Dict, Any, List
 from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
 
-from .managers import CoverLetterManager
 from .models import CoverLetter
 from ..exceptions import CoverLetterException
-
-
-def simple_write_to_excel(filename: Path, headers: Dict[str, Any], lines: List[Dict[str, Any]]):
-    """Writes to excel a List of dictionaries. The headers keys must match the keys of the values to write.
-    The headers must contain a dictionary with the title key."""
-    wb = Workbook()
-    sheet = wb.create_sheet()
-    row = 1
-    col = 1
-    for key, header in headers.items():
-        sheet.cell(row=row, column=col, value=header['title'])
-        col += 1
-    row += 1
-    for line in lines:
-        col = 1
-        for key in headers.keys():
-            value = line.get(key)
-            if value is not None:
-                sheet.cell(row=row, column=col, value=value)
-            col += 1
-        row += 1
-
-    wb.save(filename)
-
 
 COLUMN_MAPPING = {
     1: 'id',
