@@ -33,7 +33,7 @@ class CoverLetterFactory(Factory):
     date_generated = LazyAttribute(lambda x: faker.date_time_between(start_date="-1m",
                                                                      end_date="now", tzinfo=None))
     description = 'New position'
-    sync = True
+    delete = False
 
     @lazy_attribute
     def date_sent_via_email(self):
