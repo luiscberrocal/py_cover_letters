@@ -43,4 +43,4 @@ def test_synchronize(output_folder, testing_database_file):
     assert len(results[0]) == 5
     assert len(results[1]) == 0
     assert len(results[2]) == 0
-    
+

@@ -13,4 +13,4 @@ class CoverLetter(SQLModel, table=True):
     date_sent_via_email: Optional[datetime]
     date_generated: Optional[datetime]
     description: Optional[str]
-    sync: bool = Field(default=True, description='If False will not be synchronized with Excel.')
+    delete: bool = Field(default=False, description='Delete from the excel on next synchronization')

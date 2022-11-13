@@ -19,7 +19,10 @@ class ConfigurationManager:
                                   'default_template': 'Cover Letter Template.docx',
                                   'default_output_folder': str(Path(os.getcwd()) / 'output')},
                 'gmail': {'email': f'{self.username}@gmail.com', 'token': 'SECRET'},
-                'database': {'folder': str(Path(os.getcwd()) / 'data'), 'file': 'cover_letters.xlsx'}}
+                'database': {'folder': str(Path(os.getcwd()) / 'data'),
+                             'file': 'cover_letters.xlsx',
+                             'backup_folder': str(Path(os.getcwd()) / 'data' / 'backups')}
+                }
         return data
 
     def write_configuration(self, config_data: Dict[str, Any], over_write=False):
