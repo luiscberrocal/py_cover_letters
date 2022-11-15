@@ -15,7 +15,8 @@ COLUMN_MAPPING = {
     5: 'to_email',
     6: 'cover_template',
     7: 'date_sent_via_email',
-    8: 'date_generated'
+    8: 'date_generated',
+    9: 'delete'
 }
 
 
