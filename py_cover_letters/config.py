@@ -11,6 +11,9 @@ class ConfigurationManager:
         if config_folder is None:
             self.config_folder = Path().home() / '.py_cover_letters'
             self.config_folder.mkdir(exist_ok=True)
+        else:
+            self.config_folder = config_folder
+
         self.config_file = self.config_folder / 'configuration.toml'
         self.username = os.getlogin()
 
