@@ -32,6 +32,15 @@ class CoverLetterManager:
             session.refresh(cover_letter)
         return cover_letter
 
+    def delete(self, cover_letter: CoverLetter):
+        with Session(self.engine) as session:
+            statement = select(CoverLetter).where(CoverLetter.id == cover_letter.id)
+            results = session.exec(statement)
+            db_project = results.one()
+            session.delete(db_project)
+            session.commit()
+        return cover_letter
+
     def update(self, project: CoverLetter):
         with Session(self.engine) as session:
             statement = select(CoverLetter).where(CoverLetter.id == project.id)
@@ -54,10 +63,11 @@ class CoverLetterManager:
             return projects
 
 
-def synchronize(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterManager):
+def synchronize_to_db(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterManager,
+                      delete: bool = False):
     excel_cover_letters = excel_manager.read()
     updated_list = list()
-    mark_for_no_sync = list()
+    deleted_list = list()
     created_list = list()
     for cover_letter in excel_cover_letters:
         if cover_letter.id is None:
@@ -66,6 +76,10 @@ def synchronize(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterM
         else:
             db_cover_letter = db_manager.get(cover_letter.id)
             if db_cover_letter != cover_letter:
-                db_manager.update(cover_letter)
-                updated_list.append(cover_letter)
-    return created_list, updated_list, mark_for_no_sync
+                if delete and db_cover_letter.delete:
+                    db_manager.delete(cover_letter)
+                    deleted_list.append(cover_letter)
+                else:
+                    db_manager.update(cover_letter)
+                    updated_list.append(cover_letter)
+    return created_list, updated_list, deleted_list

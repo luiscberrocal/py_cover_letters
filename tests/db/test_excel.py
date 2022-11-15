@@ -1,5 +1,5 @@
 from py_cover_letters.db.excel import ExcelCoverLetterManager, COLUMN_MAPPING
-from py_cover_letters.db.managers import synchronize, CoverLetterManager
+from py_cover_letters.db.managers import synchronize_to_db, CoverLetterManager
 from tests.factories import CoverLetterFactory
 from tests.utils import read_excel
 
@@ -32,7 +32,6 @@ class TestExcelCoverManager:
 
         read_cl = excel_manager.read()
         assert len(read_cl) == 5
-        print(read_cl)
 
 
 def test_synchronize(output_folder, testing_database_file):
@@ -46,7 +45,7 @@ def test_synchronize(output_folder, testing_database_file):
     excel_manager.add(cover_letters)
 
     manager = CoverLetterManager(testing_database_file)
-    results = synchronize(excel_manager, manager)
+    results = synchronize_to_db(excel_manager, manager)
 
     assert len(results[0]) == 5
     assert len(results[1]) == 0
