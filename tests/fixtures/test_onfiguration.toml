@@ -1,0 +1,13 @@
+[cover_letters]
+template_folder = "/home/luiscberrocal/PycharmProjects/py_cover_letters/tests/fixtures/templates"
+default_template = "Cover Letter Template.docx"
+default_output_folder = "/home/luiscberrocal/PycharmProjects/py_cover_letters/output"
+
+[gmail]
+email = "luiscberrocal@gmail.com"
+token = "SECRET"
+
+[database]
+folder = "/home/luiscberrocal/PycharmProjects/py_cover_letters/output/data"
+file = "cover_letters.xlsx"
+backup_folder = "/home/luiscberrocal/PycharmProjects/py_cover_letters/output/data/backups"

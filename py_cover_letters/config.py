@@ -11,6 +11,9 @@ class ConfigurationManager:
         if config_folder is None:
             self.config_folder = Path().home() / '.py_cover_letters'
             self.config_folder.mkdir(exist_ok=True)
+        else:
+            self.config_folder = config_folder
+
         self.config_file = self.config_folder / 'configuration.toml'
         self.username = os.getlogin()
 
@@ -19,7 +22,10 @@ class ConfigurationManager:
                                   'default_template': 'Cover Letter Template.docx',
                                   'default_output_folder': str(Path(os.getcwd()) / 'output')},
                 'gmail': {'email': f'{self.username}@gmail.com', 'token': 'SECRET'},
-                'database': {'folder': str(Path(os.getcwd()) / 'data'), 'file': 'cover_letters.xlsx'}}
+                'database': {'folder': str(Path(os.getcwd()) / 'data'),
+                             'file': 'cover_letters.xlsx',
+                             'backup_folder': str(Path(os.getcwd()) / 'data' / 'backups')}
+                }
         return data
 
     def write_configuration(self, config_data: Dict[str, Any], over_write=False):
