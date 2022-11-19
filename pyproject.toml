@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "py-cover-letters"
-version = "0.1.2"
+version = "0.2.0"
 homepage = "https://github.com/luiscberrocal/py-cover-letters"
 description = "Project to create, manage and email cover letters.."
 authors = ["Luis C. Berrocal <luis.berrocal.1942@gmail.com>"]
