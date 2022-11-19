@@ -7,7 +7,7 @@ import toml
 
 class ConfigurationManager:
 
-    def __init__(self, config_folder: Path = None):
+    def __init__(self, config_folder: Path | None = None):
         if config_folder is None:
             self.config_folder = Path().home() / '.py_cover_letters'
             self.config_folder.mkdir(exist_ok=True)
@@ -21,7 +21,8 @@ class ConfigurationManager:
         data = {'cover_letters': {'template_folder': str(self.config_folder / 'templates'),
                                   'default_template': 'Cover Letter Template.docx',
                                   'default_output_folder': str(Path(os.getcwd()) / 'output')},
-                'gmail': {'email': f'{self.username}@gmail.com', 'token': 'SECRET'},
+                'gmail': {'email': f'{self.username}@gmail.com',
+                          'token': 'SECRET'},
                 'database': {'folder': str(Path(os.getcwd()) / 'data'),
                              'file': 'cover_letters.xlsx',
                              'backup_folder': str(Path(os.getcwd()) / 'data' / 'backups')}
