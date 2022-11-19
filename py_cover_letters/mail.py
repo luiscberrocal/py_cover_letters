@@ -11,7 +11,6 @@ from .config import ConfigurationManager
 def send_email(receiver_address, sender_address, password, body, subject, attachments, **kwargs):
     # The mail addresses and password
 
-    # receiver_address = 'lberrocal@pancanal.com'
     # Setup the MIME
     message = MIMEMultipart()
     message['From'] = sender_address

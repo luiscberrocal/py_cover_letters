@@ -30,6 +30,7 @@ def email(email_all: bool, confirm: bool):
 
 main.add_command(config)
 main.add_command(create)
+
 main.add_command(email)
 
 if __name__ == "__main__":
