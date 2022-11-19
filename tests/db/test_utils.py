@@ -1,7 +1,7 @@
 import re
 
 from py_cover_letters.db.excel import ExcelCoverLetterManager, COLUMN_MAPPING
-from py_cover_letters.db.utils import backup_file
+from py_cover_letters.utils import backup_file
 
 
 def test_backup(output_folder):
