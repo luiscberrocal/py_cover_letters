@@ -66,7 +66,7 @@ class CoverLetterManager:
     def filter(self, filter_type: FilterType):
         with Session(self.engine) as session:
             if filter_type == FilterType.COVER_LETTER_NOT_CREATED:
-                statement = select(CoverLetter).where(CoverLetter.date_generated is None)
+                statement = select(CoverLetter).where(CoverLetter.date_generated == None)
             elif filter_type == FilterType.COVER_LETTER_NOT_DELETED:
                 statement = select(CoverLetter).where(CoverLetter.delete == False)
             else:
