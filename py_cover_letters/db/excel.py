@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, List
 
 from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
@@ -74,3 +74,5 @@ class ExcelCoverLetterManager:
                 sheet.cell(row=row, column=col, value=value)
             row += 1
         wb.save(self.filename)
+
+

@@ -12,7 +12,7 @@ def test_backup(output_folder):
     excel_manager.write_template()
     backup_filename = backup_file(filename, output_folder)
     assert backup_filename.exists()
-    regex = re.compile(r'\d{8}_\d{6}_sample_cover_letter\.xlsx')
+    regex = re.compile(r'\d{8}_\d{6}_v\d\.\d\.\d_sample_cover_letter\.xlsx')
     match = regex.match(backup_filename.name)
     assert match is not None, f'Filename {backup_filename.name} did not match regexp'
     backup_filename.unlink()

@@ -2,7 +2,6 @@ from pathlib import Path
 
 from sqlmodel import create_engine, SQLModel, Session, select
 
-from .excel import ExcelCoverLetterManager
 from .models import CoverLetter
 from ..enums import FilterType
 from ..exceptions import UnsupportedOperationException
@@ -68,30 +67,10 @@ class CoverLetterManager:
         with Session(self.engine) as session:
             if filter_type == FilterType.COVER_LETTER_NOT_CREATED:
                 statement = select(CoverLetter).where(CoverLetter.date_generated is None)
+            elif filter_type == FilterType.COVER_LETTER_NOT_DELETED:
+                statement = select(CoverLetter).where(CoverLetter.delete == False)
             else:
                 error_message = f'Filter type {filter_type} is not currently supported.'
                 raise UnsupportedOperationException(error_message)
             projects = session.exec(statement).all()
             return projects
-
-
-def synchronize_to_db(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterManager,
-                      delete: bool = False):
-    excel_cover_letters = excel_manager.read()
-    updated_list = list()
-    deleted_list = list()
-    created_list = list()
-    for cover_letter in excel_cover_letters:
-        if cover_letter.id is None:
-            db_manager.create(cover_letter)
-            created_list.append(cover_letter)
-        else:
-            db_cover_letter = db_manager.get(cover_letter.id)
-            if db_cover_letter != cover_letter:
-                if delete and db_cover_letter.delete:
-                    db_manager.delete(cover_letter)
-                    deleted_list.append(cover_letter)
-                else:
-                    db_manager.update(cover_letter)
-                    updated_list.append(cover_letter)
-    return created_list, updated_list, deleted_list

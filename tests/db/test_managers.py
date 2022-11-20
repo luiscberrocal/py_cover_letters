@@ -1,4 +1,4 @@
-from py_cover_letters.db.managers import CoverLetterManager
+from py_cover_letters.db.sqlite import CoverLetterManager
 from tests.factories import CoverLetterFactory
 
 

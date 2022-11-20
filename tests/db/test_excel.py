@@ -1,5 +1,6 @@
 from py_cover_letters.db.excel import ExcelCoverLetterManager, COLUMN_MAPPING
-from py_cover_letters.db.managers import synchronize_to_db, CoverLetterManager
+from py_cover_letters.db.sqlite import CoverLetterManager
+from py_cover_letters.db.synchronizers import synchronize_to_db
 from tests.factories import CoverLetterFactory
 from tests.utils import read_excel
 
