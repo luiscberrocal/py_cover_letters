@@ -4,6 +4,8 @@ from sqlmodel import create_engine, SQLModel, Session, select
 
 from .excel import ExcelCoverLetterManager
 from .models import CoverLetter
+from ..enums import FilterType
+from ..exceptions import UnsupportedOperationException
 
 
 class CoverLetterManager:
@@ -59,6 +61,16 @@ class CoverLetterManager:
     def list(self):
         with Session(self.engine) as session:
             statement = select(CoverLetter)
+            projects = session.exec(statement).all()
+            return projects
+
+    def filter(self, filter_type: FilterType):
+        with Session(self.engine) as session:
+            if filter_type == FilterType.COVER_LETTER_NOT_CREATED:
+                statement = select(CoverLetter).where(CoverLetter.date_generated is None)
+            else:
+                error_message = f'Filter type {filter_type} is not currently supported.'
+                raise UnsupportedOperationException(error_message)
             projects = session.exec(statement).all()
             return projects
 
