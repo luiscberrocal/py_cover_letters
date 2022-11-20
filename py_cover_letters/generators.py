@@ -33,7 +33,8 @@ if __name__ == '__main__':
     today = datetime.today()
     context = {'today': today.strftime('%b %M %Y'), 'position_name': 'Jedi', 'company_name': 'Jedi Order'}
 
-    cover_letter = out_folder / f'{today.strftime("%Y%m%d")}_cover_{context["company_name"]}_{context["position_name"]}.pdf'
+    cover_letter = out_folder / f'{today.strftime("%Y%m%d")}_cover_{context["company_name"]}' \
+                                f'_{context["position_name"]}.pdf'
     cover_letter.unlink(missing_ok=True)
 
     write_docx_cover_letter(template, context, cover_letter)

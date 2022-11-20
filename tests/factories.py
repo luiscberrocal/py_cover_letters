@@ -6,7 +6,6 @@ from faker import Factory as FakerFactory
 from py_cover_letters.db.models import CoverLetter
 
 faker = FakerFactory.create()
-from pytz import timezone
 
 TIME_ZONE = None  # 'America/Panama'
 

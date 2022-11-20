@@ -10,4 +10,3 @@ def test_write(output_folder):
     config_manager.write_configuration(config)
 
     assert config_manager.config_file.exists()
-

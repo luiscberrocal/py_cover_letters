@@ -74,5 +74,3 @@ class ExcelCoverLetterManager:
                 sheet.cell(row=row, column=col, value=value)
             row += 1
         wb.save(self.filename)
-
-

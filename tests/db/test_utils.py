@@ -16,5 +16,3 @@ def test_backup(output_folder):
     match = regex.match(backup_filename.name)
     assert match is not None, f'Filename {backup_filename.name} did not match regexp'
     backup_filename.unlink()
-
-

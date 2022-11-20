@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 """Tests for `py_cover_letters` package."""
 
-import pytest
 from click.testing import CliRunner
 
 from py_cover_letters import cli
-
 
 
 def test_command_line_interface():

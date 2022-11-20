@@ -3,8 +3,8 @@ from pathlib import Path
 from sqlmodel import create_engine, SQLModel, Session, select
 
 from .models import CoverLetter
-from ..enums import FilterType
-from ..exceptions import UnsupportedOperationException
+from ..enums import FilterType  # type: ignore
+from ..exceptions import UnsupportedOperationException  # type: ignore
 
 
 class CoverLetterManager:
@@ -66,9 +66,9 @@ class CoverLetterManager:
     def filter(self, filter_type: FilterType):
         with Session(self.engine) as session:
             if filter_type == FilterType.COVER_LETTER_NOT_CREATED:
-                statement = select(CoverLetter).where(CoverLetter.date_generated == None)
+                statement = select(CoverLetter).where(CoverLetter.date_generated == None)  # noqa
             elif filter_type == FilterType.COVER_LETTER_NOT_DELETED:
-                statement = select(CoverLetter).where(CoverLetter.delete == False)
+                statement = select(CoverLetter).where(CoverLetter.delete == False)  # noqa
             else:
                 error_message = f'Filter type {filter_type} is not currently supported.'
                 raise UnsupportedOperationException(error_message)
