@@ -26,6 +26,13 @@ def testing_database_file(output_folder):
 
 
 @pytest.fixture(scope='function')
+def excel_file(output_folder):
+    filename = output_folder / 'test_cover_letters.xlsx'
+    yield filename
+    # filename.unlink(missing_ok=True)
+
+
+@pytest.fixture(scope='function')
 def cover_letter_manager(testing_database_file) -> CoverLetterManager:
     cover_letters = CoverLetterFactory.create_batch(5, id=None)
     cover_letters.extend(CoverLetterFactory.create_batch(6, new=True))

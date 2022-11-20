@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List, Tuple
 
 from py_cover_letters import CURRENT_CONFIGURATION
+from py_cover_letters.exceptions import CoverLetterException
 
 
 def run_commands(commands: List[str], encoding: str = 'utf-8') -> Tuple[List[str], List[str]]:
@@ -24,6 +25,10 @@ def run_commands(commands: List[str], encoding: str = 'utf-8') -> Tuple[List[str
 
 
 def backup_file(filename: Path, backup_folder: Path, add_version: bool = True) -> Path:
+    if not backup_folder.is_dir():
+        error_message = f'Backup folder has to be a forlder. Gor {backup_folder}'
+        raise CoverLetterException(error_message)
+
     datetime_format = '%Y%m%d_%H%M%S'
     if add_version:
         from . import __version__ as current_version
@@ -36,4 +41,4 @@ def backup_file(filename: Path, backup_folder: Path, add_version: bool = True) -
     return backup_filename
 
 
-backup_excel = partial(backup_file, Path(CURRENT_CONFIGURATION['database']['backup_folder']))
+backup_excel = partial(backup_file, backup_folder=Path(CURRENT_CONFIGURATION['database']['backup_folder']))
