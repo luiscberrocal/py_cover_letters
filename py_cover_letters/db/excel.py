@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Any
 
 from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
@@ -74,3 +74,18 @@ class ExcelCoverLetterManager:
                 sheet.cell(row=row, column=col, value=value)
             row += 1
         wb.save(self.filename)
+
+
+def excel_to_list(filename: Path, sheet_name: str, column_mapping: Dict[str, Any]) -> List[Any]:
+    cover_letters = list()
+    wb = load_workbook(filename)
+    sheet = wb[sheet_name]
+    last_row = sheet.max_row + 1
+    for row in range(2, last_row):
+        cover_letter_dict = dict()
+        for col, name in column_mapping.items():
+            cell_obj = sheet.cell(row=row, column=col)
+            value = cell_obj.value
+            cover_letter_dict[name] = value
+        cover_letters.append(cover_letter_dict)
+    return cover_letters

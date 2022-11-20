@@ -1,4 +1,4 @@
-from py_cover_letters.db.excel import ExcelCoverLetterManager, COLUMN_MAPPING
+from py_cover_letters.db.excel import ExcelCoverLetterManager, COLUMN_MAPPING, excel_to_list
 from py_cover_letters.db.sqlite import CoverLetterManager
 from py_cover_letters.db.synchronizers import synchronize_to_db, synchronize_to_excel
 from tests.factories import CoverLetterFactory
@@ -30,3 +30,5 @@ def test_synchronize_to_excel(cover_letter_manager, excel_file):
     assert backup_filename.exists()
     assert count == 11
 
+    cover_letter_list = excel_to_list(excel_file, 'Cover letters', COLUMN_MAPPING)
+    assert len(cover_letter_list) == 11
