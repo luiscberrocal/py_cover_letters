@@ -13,6 +13,8 @@ def config(sub_command, overwrite):
         click.echo('Configuration')
         config_manager = ConfigurationManager()
         do_configuration(config_manager, overwrite)
+    if sub_command.upper() == 'SHOW':
+        show()
     else:
         click.echo(f'sub command {sub_command}')
 
@@ -35,9 +37,15 @@ def do_configuration(config_manager: ConfigurationManager, overwrite: bool):
             prompt_text = f'{sub_key.replace("_", " ")}'
             new_key = click.prompt(prompt_text, default=sub_key_conf)
             new_configuration[key][sub_key] = new_key
-    config_manager.write_configuration(configuration, over_write=True)
+    config_manager.write_configuration(new_configuration, over_write=True)
 
 
-@click.command(help='List the current configuration.')
+# @click.command(help='List the current configuration.')
 def show():
-    print('Show configuration')
+    click.echo('Show configuration >>>>')
+    proceed = click.prompt('Keep on Y/n', default='Y')
+    #  proceed = 'Y'
+    if proceed == 'Y':
+        click.echo('Proceeding...')
+    else:
+        click.echo('Stopped')

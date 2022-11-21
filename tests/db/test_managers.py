@@ -1,3 +1,7 @@
+import inspect
+from pathlib import Path
+
+from py_cover_letters import ConfigurationManager
 from py_cover_letters.db.sqlite import CoverLetterManager
 from py_cover_letters.enums import FilterType
 from tests.factories import CoverLetterFactory
@@ -28,3 +32,8 @@ class TestCoverLetterManager:
         all_cover_letters = cover_letter_manager.list()
         assert len(not_created) == 8
         assert len(all_cover_letters) == 13
+
+
+def test_inspect():
+    sf = Path(inspect.getsourcefile(ConfigurationManager)).parent / 'templates'
+    assert str(sf) == '/home/luiscberrocal/PycharmProjects/py_cover_letters/py_cover_letters/templates'
