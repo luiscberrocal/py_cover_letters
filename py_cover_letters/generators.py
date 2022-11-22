@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
@@ -5,6 +6,26 @@ from typing import Dict, Any
 from docxtpl import DocxTemplate
 
 from .utils import run_commands
+
+
+def get_libreoffice_version():
+    which_cmd = ['which', 'libreoffice']
+    results, errors = run_commands(which_cmd)
+    if len(results) == 0:
+        return 'Libreoffice not found', False
+    if len(errors) > 0:
+        return 'Error running which command.', False
+
+    regexp = re.compile(r"LibreOffice\s(?P<version>(\d\.\d\.\d\.?\d?)\s?(\d*)\(Build:\d+\))")
+    command = ['libreoffice', '--version']
+    results, errors = run_commands(command)
+    if len(errors) > 0:
+        return 'Errors running command libreoffice --version', False
+    match = regexp.match(results[0])
+    if match:
+        return match.group('version'), True
+    else:
+        return results[0], False
 
 
 def convert_docx_to_pdf(docx_file: Path, output_folder: Path):

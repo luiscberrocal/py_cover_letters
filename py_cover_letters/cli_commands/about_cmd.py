@@ -3,8 +3,12 @@ from platform import python_version
 
 import click
 
+from py_cover_letters.generators import get_libreoffice_version
+
 
 @click.command('about', help='About this application.')
 def do_about():
+    libreoffice_version, is_valid = get_libreoffice_version()
     click.echo(f'Operating System: {sys.platform}')
     click.echo(f'Python : {python_version()}')
+    click.echo(f'Libreoffice: {libreoffice_version}')
