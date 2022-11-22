@@ -2,7 +2,8 @@
 
 import click
 
-from py_cover_letters.cli_commands.configuration import config
+from .cli_commands.about_cmd import do_about
+from .cli_commands.configuration import config
 from . import __version__ as current_version
 
 
@@ -27,7 +28,8 @@ def email(email_all: bool, confirm: bool):
 
 main.add_command(config)
 main.add_command(create)
-
 main.add_command(email)
+main.add_command(do_about)
+
 if __name__ == "__main__":
     main()  # pragma: no cover
