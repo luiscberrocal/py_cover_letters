@@ -1,8 +1,36 @@
+import json
 import os
 from pathlib import Path
 from typing import Dict, Any
 
 import toml
+
+from py_cover_letters.exceptions import ConfigurationError
+from __future__ import annotations
+
+from pydantic import BaseModel
+
+
+class CoverLetter(BaseModel):
+    template_folder: str
+    default_template: str
+    default_output_folder: str
+
+
+class Gmail(BaseModel):
+    email: str
+    token: str
+
+
+class Database(BaseModel):
+    folder: str
+    file: str
+
+
+class Configuration(BaseModel):
+    cover_letters: CoverLetter
+    gmail: Gmail
+    database: Database
 
 
 class ConfigurationManager:
@@ -36,29 +64,20 @@ class ConfigurationManager:
             toml.dump(config_data, f)
 
     def get_configuration(self):
+        if not self.config_folder.exists():
+            error_message = f'No configuration file found. Run py-cover-letters config.'
+            raise ConfigurationError(error_message)
+
         with open(self.config_file, 'r') as f:
             configuration = toml.load(f)
         return configuration
+
+    def export_to_json(self, export_file: Path):
+        config = self.get_configuration()
+        with open(export_file, 'w') as f:
+            json.dump(config, f)
 
     @classmethod
     def get_current(cls):
         config = cls()
         return config.get_configuration()
-
-
-def main(install: True):
-    config_manager = ConfigurationManager()
-    configuration = config_manager.get_sample_config()
-    email = configuration['gmail']['email']
-    new_email = input(f'Sender email <{email}>: ')
-    if new_email != '':
-        configuration['gmail']['email'] = new_email
-
-    gmail_token = input('GMail token: ')
-    configuration['gmail']['token'] = gmail_token
-    print(configuration)
-    config_manager.write_configuration(configuration, over_write=True)
-
-
-if __name__ == '__main__':
-    main(True)
