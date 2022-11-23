@@ -5,6 +5,10 @@ __email__ = 'luis.berrocal.1942@gmail.com'
 __version__ = '0.2.0'
 
 from py_cover_letters.config import ConfigurationManager
-print('>>>>>  before current config')
-CURRENT_CONFIGURATION = ConfigurationManager().get_current()
-print(f'>>>>>  after current config {CURRENT_CONFIGURATION}')
+
+config_manager = ConfigurationManager()
+if config_manager.is_valid():
+    CURRENT_CONFIGURATION = config_manager.get_current()
+else:
+    CURRENT_CONFIGURATION = config_manager.get_sample_config()
+    print(f'>>>>> Invalid configuration {config_manager.config_file}')
