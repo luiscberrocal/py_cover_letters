@@ -4,11 +4,9 @@ from pathlib import Path
 from typing import Dict, Any
 
 import toml
+from pydantic import BaseModel, ValidationError
 
 from py_cover_letters.exceptions import ConfigurationError
-from __future__ import annotations
-
-from pydantic import BaseModel
 
 
 class CoverLetter(BaseModel):
@@ -25,6 +23,7 @@ class Gmail(BaseModel):
 class Database(BaseModel):
     folder: str
     file: str
+    backup_folder: str
 
 
 class Configuration(BaseModel):
@@ -45,7 +44,7 @@ class ConfigurationManager:
         self.config_file = self.config_folder / 'configuration.toml'
         self.username = os.getlogin()
 
-    def get_sample_config(self):
+    def get_sample_config(self) -> Dict[str, Any]:
         data = {'cover_letters': {'template_folder': str(self.config_folder / 'templates'),
                                   'default_template': 'Cover Letter Template.docx',
                                   'default_output_folder': str(Path(os.getcwd()) / 'output')},
@@ -72,10 +71,25 @@ class ConfigurationManager:
             configuration = toml.load(f)
         return configuration
 
+    def get_configuration_obj(self):
+        config = self.get_configuration()
+        config_obj = Configuration(**config)
+        return config_obj
+
     def export_to_json(self, export_file: Path):
         config = self.get_configuration()
         with open(export_file, 'w') as f:
             json.dump(config, f)
+
+    def is_valid(self, raise_error: bool = False) -> bool:
+        try:
+            self.get_configuration_obj()
+            return True
+        except ValidationError as e:
+            error_msg = f'Configuration error. Type: {e.__class__.__name__} Error: {e}'
+            if raise_error:
+                raise ConfigurationError(error_msg)
+            return False
 
     @classmethod
     def get_current(cls):
