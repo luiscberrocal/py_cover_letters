@@ -45,17 +45,17 @@ def write_docx_cover_letter(template_file: Path, context: Dict[str, Any], output
     doc.save(output_file)
 
 
-if __name__ == '__main__':
-    root_folder = Path(__file__).parent.parent.parent.parent
-    fixtures_folder = root_folder / 'tests' / 'fixtures'
-    out_folder = root_folder / 'output'
-
-    template = fixtures_folder / '_experimental' / 'Cover Letter Template.docx'
-    today = datetime.today()
-    context = {'today': today.strftime('%b %M %Y'), 'position_name': 'Jedi', 'company_name': 'Jedi Order'}
-
-    cover_letter = out_folder / f'{today.strftime("%Y%m%d")}_cover_{context["company_name"]}' \
-                                f'_{context["position_name"]}.pdf'
-    cover_letter.unlink(missing_ok=True)
-
-    write_docx_cover_letter(template, context, cover_letter)
+# if __name__ == '__main__':
+#     root_folder = Path(__file__).parent.parent.parent.parent
+#     fixtures_folder = root_folder / 'tests' / 'fixtures'
+#     out_folder = root_folder / 'output'
+#
+#     template = fixtures_folder / '_experimental' / 'Cover Letter Template.docx'
+#     today = datetime.today()
+#     context = {'today': today.strftime('%b %M %Y'), 'position_name': 'Jedi', 'company_name': 'Jedi Order'}
+#
+#     cover_letter = out_folder / f'{today.strftime("%Y%m%d")}_cover_{context["company_name"]}' \
+#                                 f'_{context["position_name"]}.pdf'
+#     cover_letter.unlink(missing_ok=True)
+#
+#     write_docx_cover_letter(template, context, cover_letter)
