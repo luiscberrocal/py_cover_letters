@@ -64,7 +64,7 @@ class ConfigurationManager:
 
     def get_configuration(self):
         if not self.config_folder.exists():
-            error_message = f'No configuration file found. Run py-cover-letters config.'
+            error_message = 'No configuration file found. Run py-cover-letters config.'
             raise ConfigurationError(error_message)
 
         with open(self.config_file, 'r') as f:

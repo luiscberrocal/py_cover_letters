@@ -1,6 +1,6 @@
 import pytest
 
-from py_cover_letters.config import ConfigurationManager, Database
+from py_cover_letters.config import ConfigurationManager
 from py_cover_letters.exceptions import ConfigurationError
 
 
@@ -34,4 +34,3 @@ def test_is_valid(output_folder):
     clean_error = str(e.value).replace('\n', ' ')
     assert clean_error == 'Configuration error. Type: ValidationError Error: 1 validation error for Configuration' \
                           ' database -> backup_folder   field required (type=value_error.missing)'
-

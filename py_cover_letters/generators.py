@@ -1,5 +1,4 @@
 import re
-from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
 
@@ -43,7 +42,6 @@ def write_docx_cover_letter(template_file: Path, context: Dict[str, Any], output
     doc.render(context)
     # Save the file with personalized filename
     doc.save(output_file)
-
 
 # if __name__ == '__main__':
 #     root_folder = Path(__file__).parent.parent.parent.parent

@@ -31,5 +31,3 @@ class TestExcelCoverManager:
 
         read_cl = excel_manager.read()
         assert len(read_cl) == 5
-
-
