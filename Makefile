@@ -1,7 +1,7 @@
 sources = py_cover_letters
 
 .PHONY: test format lint unittest coverage pre-commit clean
-test: format lint unittest
+test: lint unittest
 
 format:
 	isort $(sources) tests
