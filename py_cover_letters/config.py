@@ -47,6 +47,9 @@ class ConfigurationManager:
         else:
             self.config_file = self.config_folder / config_filename
 
+        self.config_backup_folder = self.config_folder / 'backups'
+        self.config_backup_folder.mkdir(exist_ok=True)
+
         self.username = os.getlogin()
 
     def get_sample_config(self) -> Dict[str, Any]:
@@ -61,13 +64,13 @@ class ConfigurationManager:
                 }
         return data
 
-    def write_configuration(self, config_data: Dict[str, Any], over_write=False):
+    def write_configuration(self, config_data: Dict[str, Any], over_write=False) ->None:
         if self.config_file.exists() and not over_write:
             raise Exception('Cannot overwrite config file.')
         with open(self.config_file, 'w') as f:
             toml.dump(config_data, f)
 
-    def get_configuration(self):
+    def get_configuration(self) -> Dict[str, Any]:
         if not self.config_folder.exists():
             error_message = 'No configuration file found. Run py-cover-letters config.'
             raise ConfigurationError(error_message)
@@ -76,12 +79,12 @@ class ConfigurationManager:
             configuration = toml.load(f)
         return configuration
 
-    def get_configuration_obj(self):
+    def get_configuration_obj(self) -> Configuration:
         config = self.get_configuration()
         config_obj = Configuration(**config)
         return config_obj
 
-    def export_to_json(self, export_file: Path):
+    def export_to_json(self, export_file: Path) -> None:
         config = self.get_configuration()
         with open(export_file, 'w') as f:
             json.dump(config, f)
@@ -96,11 +99,14 @@ class ConfigurationManager:
                 raise ConfigurationError(error_msg)
             return False
 
-    def backup(self):
-        config_backup_folder = self.config_folder / 'backups'
-        config_backup_folder.mkdir(exist_ok=True)
-        backup_filename = backup_file(self.config_file, config_backup_folder)
+    def backup(self) -> Path:
+        backup_filename = backup_file(self.config_file, self.config_backup_folder)
         return backup_filename
+
+    def delete(self) -> Path:
+        backup_file = self.backup()
+        self.config_file.unlink(missing_ok=True)
+        return backup_file
 
     @classmethod
     def get_current(cls):
