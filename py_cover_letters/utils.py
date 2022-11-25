@@ -1,11 +1,9 @@
 import datetime
 import shutil
 import subprocess
-from functools import partial
 from pathlib import Path
 from typing import List, Tuple
 
-from py_cover_letters import CURRENT_CONFIGURATION
 from py_cover_letters.exceptions import CoverLetterException
 
 
@@ -41,4 +39,8 @@ def backup_file(filename: Path, backup_folder: Path, add_version: bool = True) -
     return backup_filename
 
 
-backup_excel = partial(backup_file, backup_folder=Path(CURRENT_CONFIGURATION['database']['backup_folder']))
+def backup_excel(filename: Path, add_version: bool = True) -> Path:
+    from py_cover_letters import CURRENT_CONFIGURATION
+    backup_folder = Path(CURRENT_CONFIGURATION['database']['backup_folder'])
+    backup_excel_file = backup_file(filename, backup_folder, add_version=add_version)
+    return backup_excel_file

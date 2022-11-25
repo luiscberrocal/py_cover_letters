@@ -2,6 +2,7 @@ import pytest
 
 from py_cover_letters.config import ConfigurationManager
 from py_cover_letters.exceptions import ConfigurationError
+from tests.factories import TestingConfigurationManager
 
 
 def test_write(output_folder):
@@ -23,11 +24,10 @@ def test_export_json(output_folder):
     config_manager.export_to_json(json_file)
 
 
-def test_is_valid(output_folder):
-    config_file = output_folder / 'configuration.toml'
-    config_file.unlink(missing_ok=True)
+def test_is_valid(fixtures_folder):
+    config_file = fixtures_folder / 'configuration_missing_key.toml'
 
-    config_manager = ConfigurationManager()
+    config_manager = TestingConfigurationManager(config_file)
     with pytest.raises(ConfigurationError) as e:
         config_manager.is_valid(raise_error=True)
 

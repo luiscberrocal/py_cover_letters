@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import Dict, Any, Union
+from typing import Dict, Any, Optional
 
 import toml
 from pydantic import BaseModel, ValidationError
@@ -35,14 +35,18 @@ class Configuration(BaseModel):
 
 class ConfigurationManager:
 
-    def __init__(self, config_folder: Union[Path, None] = None):
+    def __init__(self, config_folder: Optional[Path] = None,
+                 config_filename: Optional[str] = None):
         if config_folder is None:
             self.config_folder = Path().home() / '.py_cover_letters'
             self.config_folder.mkdir(exist_ok=True)
         else:
             self.config_folder = config_folder
+        if config_filename is None:
+            self.config_file = self.config_folder / 'configuration.toml'
+        else:
+            self.config_file = self.config_folder / config_filename
 
-        self.config_file = self.config_folder / 'configuration.toml'
         self.username = os.getlogin()
 
     def get_sample_config(self) -> Dict[str, Any]:
