@@ -27,9 +27,7 @@ def do_configuration(config_manager: ConfigurationManager, overwrite: bool):
         click.echo(f'The configuration already exists ({config_manager.config_file}). Use the --overwrite flag.')
         return
     if config_manager.config_file.exists() and overwrite:
-        config_backup_folder = config_manager.config_folder / 'backups'
-        config_backup_folder.mkdir(exist_ok=True)
-        backup_filename = backup_file(config_manager.config_file, config_backup_folder)
+        backup_filename = config_manager.backup()
         click.echo(f'Backup of the current config file was made {backup_filename}')
         configuration = config_manager.get_configuration()
     new_configuration = configuration.copy()
