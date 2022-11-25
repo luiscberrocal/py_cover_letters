@@ -8,7 +8,9 @@ from py_cover_letters.utils import backup_file
 @click.argument('sub_command', required=False)
 @click.option('--overwrite', is_flag=True, default=False, help="Overwrite the configuration file.")
 def config(sub_command, overwrite):
-    """Configure the application."""
+    """Configure the application. Sub commands:
+    show: shows current configuration.
+    delete: deletes current configuration."""
     if sub_command is None:
         click.echo('Configuration')
         config_manager = ConfigurationManager()
@@ -40,12 +42,9 @@ def do_configuration(config_manager: ConfigurationManager, overwrite: bool):
     config_manager.write_configuration(new_configuration, over_write=True)
 
 
-# @click.command(help='List the current configuration.')
 def show():
-    click.echo('Show configuration >>>>')
-    proceed = click.prompt('Keep on Y/n', default='Y')
-    #  proceed = 'Y'
-    if proceed == 'Y':
-        click.echo('Proceeding...')
-    else:
-        click.echo('Stopped')
+    click.secho('Show subcommand is not implemented yet.', fg='red')
+
+
+def delete(config_manager: ConfigurationManager):
+    click.secho('Delete subcommand is not implemented yet.', fg='red')

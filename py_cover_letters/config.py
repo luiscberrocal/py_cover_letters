@@ -6,7 +6,8 @@ from typing import Dict, Any
 import toml
 from pydantic import BaseModel, ValidationError
 
-from py_cover_letters.exceptions import ConfigurationError
+from .exceptions import ConfigurationError
+from .utils import backup_file
 
 
 class CoverLetter(BaseModel):
@@ -90,6 +91,12 @@ class ConfigurationManager:
             if raise_error:
                 raise ConfigurationError(error_msg)
             return False
+
+    def backup(self):
+        config_backup_folder = self.config_folder / 'backups'
+        config_backup_folder.mkdir(exist_ok=True)
+        backup_filename = backup_file(self.config_file, config_backup_folder)
+
 
     @classmethod
     def get_current(cls):
