@@ -10,4 +10,3 @@ token = "SECRET"
 [database]
 folder = "/home/luiscberrocal/PycharmProjects/py_cover_letters/output/data"
 file = "cover_letters.xlsx"
-backup_folder = "/home/luiscberrocal/PycharmProjects/py_cover_letters/output/data/backups"
