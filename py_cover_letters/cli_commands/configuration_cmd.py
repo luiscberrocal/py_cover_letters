@@ -15,7 +15,7 @@ def config(sub_command, overwrite):
         click.echo('Configuration')
         config_manager = ConfigurationManager()
         do_configuration(config_manager, overwrite)
-    if sub_command.upper() == 'SHOW':
+    elif sub_command == 'show':
         show()
     else:
         click.echo(f'sub command {sub_command}')

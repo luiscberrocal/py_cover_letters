@@ -52,6 +52,11 @@ class ConfigurationManager:
 
         self.username = os.getlogin()
 
+        if not self.config_file.exists():
+            tmp_config = self.get_sample_config()
+            self.write_configuration(tmp_config)
+
+
     def get_sample_config(self) -> Dict[str, Any]:
         data = {'cover_letters': {'template_folder': str(self.config_folder / 'templates'),
                                   'default_template': 'Cover Letter Template.docx',
