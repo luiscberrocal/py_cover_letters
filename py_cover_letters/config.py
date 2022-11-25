@@ -56,7 +56,6 @@ class ConfigurationManager:
             tmp_config = self.get_sample_config()
             self.write_configuration(tmp_config)
 
-
     def get_sample_config(self) -> Dict[str, Any]:
         data = {'cover_letters': {'template_folder': str(self.config_folder / 'templates'),
                                   'default_template': 'Cover Letter Template.docx',
@@ -69,7 +68,7 @@ class ConfigurationManager:
                 }
         return data
 
-    def write_configuration(self, config_data: Dict[str, Any], over_write=False) ->None:
+    def write_configuration(self, config_data: Dict[str, Any], over_write=False) -> None:
         if self.config_file.exists() and not over_write:
             raise Exception('Cannot overwrite config file.')
         with open(self.config_file, 'w') as f:

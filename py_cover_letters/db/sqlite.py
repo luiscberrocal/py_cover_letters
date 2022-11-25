@@ -60,8 +60,8 @@ class CoverLetterManager:
     def list(self):
         with Session(self.engine) as session:
             statement = select(CoverLetter)
-            projects = session.exec(statement).all()
-            return projects
+            cover_letters = session.exec(statement).all()
+            return cover_letters
 
     def filter(self, filter_type: FilterType):
         with Session(self.engine) as session:
@@ -72,5 +72,5 @@ class CoverLetterManager:
             else:
                 error_message = f'Filter type {filter_type} is not currently supported.'
                 raise UnsupportedOperationException(error_message)
-            projects = session.exec(statement).all()
-            return projects
+            cover_letters = session.exec(statement).all()
+            return cover_letters
