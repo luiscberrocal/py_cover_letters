@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
@@ -22,10 +22,13 @@ COLUMN_MAPPING = {
 
 class ExcelCoverLetterManager:
 
-    def __init__(self, filename: Path, column_mapping: Dict[int, str],
+    def __init__(self, filename: Path, column_mapping: Optional[Dict[int, str]],
                  sheet_name: str = 'Cover letters'):
         self.filename = filename
-        self.column_mapping = column_mapping
+        if column_mapping is None:
+            self.column_mapping = COLUMN_MAPPING
+        else:
+            self.column_mapping = column_mapping
         self.columns = [col_name for _, col_name in self.column_mapping.items()]
         self.sheet_name = sheet_name
 

@@ -10,8 +10,10 @@ def test_write(output_folder):
     config_file.unlink(missing_ok=True)
 
     config_manager = ConfigurationManager(output_folder)
+    assert config_manager.config_file.exists()
+
     config = config_manager.get_sample_config()
-    config_manager.write_configuration(config)
+    config_manager.write_configuration(config, over_write=True)
 
     assert config_manager.config_file.exists()
 

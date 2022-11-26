@@ -36,4 +36,5 @@ class TestCoverLetterManager:
 
 def test_inspect():
     sf = Path(inspect.getsourcefile(ConfigurationManager)).parent / 'templates'
-    assert str(sf) == '/home/luiscberrocal/PycharmProjects/py_cover_letters/py_cover_letters/templates'
+    home_folder = Path.home()
+    assert str(sf) == f'{home_folder}/PycharmProjects/py_cover_letters/py_cover_letters/templates'

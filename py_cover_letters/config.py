@@ -14,6 +14,7 @@ class CoverLetter(BaseModel):
     template_folder: str
     default_template: str
     default_output_folder: str
+    is_sample: Optional[bool] = True
 
 
 class Gmail(BaseModel):
@@ -59,7 +60,8 @@ class ConfigurationManager:
     def get_sample_config(self) -> Dict[str, Any]:
         data = {'cover_letters': {'template_folder': str(self.config_folder / 'templates'),
                                   'default_template': 'Cover Letter Template.docx',
-                                  'default_output_folder': str(Path(os.getcwd()) / 'output')},
+                                  'default_output_folder': str(Path(os.getcwd()) / 'output'),
+                                  'is_sample': True},
                 'gmail': {'email': f'{self.username}@gmail.com',
                           'token': 'SECRET'},
                 'database': {'folder': str(Path(os.getcwd()) / 'data'),
@@ -68,7 +70,8 @@ class ConfigurationManager:
                 }
         return data
 
-    def write_configuration(self, config_data: Dict[str, Any], over_write=False) -> None:
+    def write_configuration(self, config_data: Dict[str, Any], over_write: bool = False,
+                            is_sample: bool=False) -> None:
         if self.config_file.exists() and not over_write:
             raise Exception('Cannot overwrite config file.')
         with open(self.config_file, 'w') as f:
