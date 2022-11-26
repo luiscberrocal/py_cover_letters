@@ -1,6 +1,7 @@
 import re
 
-from py_cover_letters.db.excel import ExcelCoverLetterManager, COLUMN_MAPPING
+from py_cover_letters.db.excel import ExcelCoverLetterManager
+from py_cover_letters.constants import COLUMN_MAPPING
 from py_cover_letters.utils import backup_file
 
 

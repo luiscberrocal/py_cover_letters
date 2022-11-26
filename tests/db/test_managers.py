@@ -27,7 +27,7 @@ class TestCoverLetterManager:
         assert len(deleted) == 11
         assert len(all_cover_letters) == 13
 
-    def test_filter_not_sent(self, cover_letter_manager):
+    def test_filter_not_created(self, cover_letter_manager):
         not_created = cover_letter_manager.filter(FilterType.COVER_LETTER_NOT_CREATED)
         all_cover_letters = cover_letter_manager.list()
         assert len(not_created) == 8

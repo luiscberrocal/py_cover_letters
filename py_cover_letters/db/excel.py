@@ -5,24 +5,13 @@ from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
 
 from .models import CoverLetter
+from ..constants import COLUMN_MAPPING
 from ..exceptions import CoverLetterException
-
-COLUMN_MAPPING = {
-    1: 'id',
-    2: 'company_name',
-    3: 'position_name',
-    4: 'greeting',
-    5: 'to_email',
-    6: 'cover_template',
-    7: 'date_sent_via_email',
-    8: 'date_generated',
-    9: 'delete'
-}
 
 
 class ExcelCoverLetterManager:
 
-    def __init__(self, filename: Path, column_mapping: Optional[Dict[int, str]],
+    def __init__(self, filename: Path, column_mapping: Optional[Dict[int, str]] = None,
                  sheet_name: str = 'Cover letters'):
         self.filename = filename
         if column_mapping is None:
