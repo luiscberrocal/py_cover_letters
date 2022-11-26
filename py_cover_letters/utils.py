@@ -1,4 +1,5 @@
 import datetime
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -44,3 +45,23 @@ def backup_excel(filename: Path, add_version: bool = True) -> Path:
     backup_folder = Path(CURRENT_CONFIGURATION['database']['backup_folder'])
     backup_excel_file = backup_file(filename, backup_folder, add_version=add_version)
     return backup_excel_file
+
+
+def get_libreoffice_version():
+    which_cmd = ['which', 'libreoffice']
+    results, errors = run_commands(which_cmd)
+    if len(results) == 0:
+        return 'Libreoffice not found.', False
+    if len(errors) > 0:
+        return 'Error running which command.', False
+
+    regexp = re.compile(r"LibreOffice\s(?P<version>(\d\.\d\.\d\.?\d?)\s?(\d*)\(Build:\d+\))")
+    command = ['libreoffice', '--version']
+    results, errors = run_commands(command)
+    if len(errors) > 0:
+        return 'Errors running command libreoffice --version', False
+    match = regexp.match(results[0])
+    if match:
+        return match.group('version'), True
+    else:
+        return results[0], False

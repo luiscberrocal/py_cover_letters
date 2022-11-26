@@ -4,7 +4,7 @@ from platform import python_version
 import click
 
 from py_cover_letters.constants import BANNER
-from py_cover_letters.generators import get_libreoffice_version
+from py_cover_letters.utils import get_libreoffice_version
 
 
 @click.command('about', help='About this application.')

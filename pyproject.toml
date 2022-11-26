@@ -41,6 +41,7 @@ flake8 = "^5.0.4"
 flake8-docstrings = "^1.6.0"
 factory-boy = "^3.2.1"
 pytz = "^2022.6"
+pytest-mock = "^3.10.0"
 
 
 [tool.poetry.group.doc.dependencies]

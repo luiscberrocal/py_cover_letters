@@ -1,6 +1,6 @@
 import re
 
-from py_cover_letters.generators import get_libreoffice_version
+from py_cover_letters.utils import get_libreoffice_version
 
 
 def test_get_libreoffice_version():
