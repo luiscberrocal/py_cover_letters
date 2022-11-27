@@ -30,11 +30,7 @@ def test_write_cover_letter(fixtures_folder, output_folder):
 
 
 def test_convert_docx_to_pdf(fixtures_folder, output_folder):
-    config = ConfigurationManager()
-    configuration = config.get_configuration()
-    template = Path(configuration['cover_letters']['template_folder']) / configuration['cover_letters'][
-        'default_template']
-    # template = fixtures_folder / '_experimental' / 'Cover Letter Template.docx'
+    template = fixtures_folder / 'templates' / 'Cover Letter Template.docx'
     today = datetime.today()
     context = {'date': today.strftime('%B %-d, %Y'), 'position_name': 'Jedi Knight',
                'company_name': 'Jedi Order Council'}
@@ -48,3 +44,5 @@ def test_convert_docx_to_pdf(fixtures_folder, output_folder):
     assert cover_letter.exists()
 
     pdf = convert_docx_to_pdf(cover_letter, output_folder)
+    assert pdf.exists()
+    pdf.unlink(missing_ok=True)
