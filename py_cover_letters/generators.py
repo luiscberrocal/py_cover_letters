@@ -1,3 +1,4 @@
+import datetime
 from pathlib import Path
 from typing import Dict, Any
 
@@ -21,6 +22,20 @@ def write_docx_cover_letter(template_file: Path, context: Dict[str, Any], output
     doc.render(context)
     # Save the file with personalized filename
     doc.save(output_file)
+
+
+def clean_filename(filename: str):
+    new_name = filename.replace('.', '').replace(',', '').replace(' ', '_')
+    return new_name
+
+
+def build_cover_letter_filename(output_folder: Path, template_context: Dict[str, Any]) -> Path:
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    company_name = clean_filename(template_context['company_name'])
+    position_name = clean_filename(template_context['position_name'])
+    base_name = f'{timestamp}_{company_name}_{position_name}.docx'
+    cover_letter_file = output_folder / base_name
+    return cover_letter_file
 
 # if __name__ == '__main__':
 #     root_folder = Path(__file__).parent.parent.parent.parent

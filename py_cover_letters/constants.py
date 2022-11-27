@@ -18,6 +18,8 @@ COLUMN_MAPPING = {
     8: 'date_generated',
     9: 'delete'
 }
+
 SQLITE_FILENAME = 'cover_letters.sqlite'
 SQLITE_FILE = Path(CURRENT_CONFIGURATION['database']['folder']) / SQLITE_FILENAME
 EXCEL_FILE = Path(CURRENT_CONFIGURATION['database']['folder']) / CURRENT_CONFIGURATION['database']['file']
+DEFAULT_OUTPUT_FOLDER = Path(CURRENT_CONFIGURATION['cover_letters']['default_output_folder'])

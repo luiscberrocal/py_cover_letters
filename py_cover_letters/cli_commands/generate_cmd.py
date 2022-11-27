@@ -13,6 +13,9 @@ def do_generate():
     db_manager = CoverLetterManager(SQLITE_FILE)
     synchronize_to_db(excel_manager, db_manager)
     not_created = db_manager.filter(FilterType.COVER_LETTER_NOT_CREATED)
+
     for to_create in not_created:
-        to_create
+        ctx = to_create.get_context()
+
+
 
