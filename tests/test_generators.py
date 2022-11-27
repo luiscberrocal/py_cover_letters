@@ -5,8 +5,10 @@ from pathlib import Path
 from py_cover_letters import ConfigurationManager
 from py_cover_letters.generators import write_docx_cover_letter, convert_docx_to_pdf
 from py_cover_letters.utils import get_libreoffice_version
+from tests.conftest import libreoffice_required
 
 
+@libreoffice_required
 def test_get_libreoffice_version():
     regexp = re.compile(r"(\d\.\d\.\d\.?\d?)\s?(\d*)\(Build:\d+\)")
     version, is_valid = get_libreoffice_version()
@@ -29,6 +31,7 @@ def test_write_cover_letter(fixtures_folder, output_folder):
     assert cover_letter.exists()
 
 
+@libreoffice_required
 def test_convert_docx_to_pdf(fixtures_folder, output_folder):
     template = fixtures_folder / 'templates' / 'Cover Letter Template.docx'
     today = datetime.today()
