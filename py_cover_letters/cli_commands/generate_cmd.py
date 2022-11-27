@@ -6,7 +6,7 @@ from ..db.excel import ExcelCoverLetterManager
 from ..db.sqlite import CoverLetterManager
 from ..db.synchronizers import synchronize_to_db
 from ..enums import FilterType
-from ..generators import build_cover_letter_filename, write_docx_cover_letter
+from ..generators import build_cover_letter_filename, write_docx_cover_letter, convert_docx_to_pdf
 from ..utils import is_libreoffice_installed
 
 
@@ -21,6 +21,6 @@ def do_generate():
         cover_letter_file = build_cover_letter_filename(DEFAULT_OUTPUT_FOLDER, ctx)
         write_docx_cover_letter(DEFAULT_TEMPLATE, ctx, cover_letter_file)
         if is_libreoffice_installed:
-            pass
+            convert_docx_to_pdf(cover_letter_file)
         else:
             warnings = 'Could not create PDF.'
