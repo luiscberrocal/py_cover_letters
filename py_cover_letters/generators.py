@@ -15,7 +15,7 @@ def convert_docx_to_pdf(docx_file: Path, output_folder: Path):
     return result, errors
 
 
-def write_docx_cover_letter(template_file: Path, context: Dict[str, Any], output_file: Path):
+def write_docx_cover_letter(template_file: Path, context: Dict[str, Any], output_file: Path) -> None:
     # Open our master template
     doc = DocxTemplate(template_file)
     # Load them up

@@ -20,3 +20,5 @@ def read_excel(filename: Path, sheet_name: str, column_mapping: Dict[int, str],
             cover_letter_dict[name] = value
         cover_letters.append(cover_letter_dict)
     return cover_letters
+
+

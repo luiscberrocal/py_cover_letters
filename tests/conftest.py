@@ -3,8 +3,8 @@ from pathlib import Path
 import pytest
 
 from py_cover_letters.db.sqlite import CoverLetterManager
-from py_cover_letters.utils import get_libreoffice_version
 from tests.factories import CoverLetterFactory
+from py_cover_letters.utils import is_libreoffice_installed
 
 
 @pytest.fixture(scope='session')
@@ -43,15 +43,6 @@ def cover_letter_manager(testing_database_file) -> CoverLetterManager:
     for cover_letter in cover_letters:
         db_manager.create(cover_letter)
     return db_manager
-
-
-def is_libreoffice_installed() -> bool:
-    is_installed = False
-    try:
-        _, is_installed = get_libreoffice_version()
-    except Exception:
-        pass
-    return is_installed
 
 
 libreoffice_required = pytest.mark.skipif(

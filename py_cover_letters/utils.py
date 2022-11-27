@@ -66,3 +66,12 @@ def get_libreoffice_version():
         return match.group('version'), True
     else:
         return results[0], False
+
+
+def is_libreoffice_installed() -> bool:
+    is_installed = False
+    try:
+        _, is_installed = get_libreoffice_version()
+    except Exception:
+        pass
+    return is_installed
