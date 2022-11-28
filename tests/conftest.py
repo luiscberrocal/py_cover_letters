@@ -31,7 +31,7 @@ def testing_database_file(output_folder):
 def excel_file(output_folder):
     filename = output_folder / 'test_cover_letters.xlsx'
     yield filename
-    # filename.unlink(missing_ok=True)
+    filename.unlink(missing_ok=True)
 
 
 @pytest.fixture(scope='function')

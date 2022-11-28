@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from sqlalchemy.exc import NoResultFound
 from sqlmodel import create_engine, SQLModel, Session, select
 
 from .models import CoverLetter
@@ -20,12 +21,14 @@ class CoverLetterManager:
             return project_result
 
     def get(self, cover_letter_id: int) -> CoverLetter:
-        with Session(self.engine) as session:
-            statement = select(CoverLetter).where(CoverLetter.id == cover_letter_id)
-            results = session.exec(statement)
-            db_project = results.one()
-        return db_project
-
+        try:
+            with Session(self.engine) as session:
+                statement = select(CoverLetter).where(CoverLetter.id == cover_letter_id)
+                results = session.exec(statement)
+                db_project = results.one()
+            return db_project
+        except NoResultFound:
+            return None
     def create(self, cover_letter: CoverLetter):
         with Session(self.engine) as session:
             session.add(cover_letter)
