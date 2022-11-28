@@ -14,3 +14,6 @@ def test_update_not_saved(fixtures_folder, output_folder):
 
     updated = manager.update_not_saved()
     assert len(updated) == 50
+
+    updated = manager.update_not_saved()
+    assert len(updated) == 0

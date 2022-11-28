@@ -35,7 +35,7 @@ class CoverLetterManager(Protocol):
 
 class ExcelManager:
     def __init__(self, filename: Path, column_mapping: Optional[Dict[int, str]] = None,
-                 sheet_name: str = SHEET_NAME, backup_folder: Optional[Path]= None):
+                 sheet_name: str = SHEET_NAME, backup_folder: Optional[Path] = None):
         if backup_folder is None:
             raise Exception('xxxxx')
         else:
@@ -95,6 +95,20 @@ class ExcelManager:
             print(cover_letter)
         if commit:
             backup_file(self.filename, self.backup_folder)
-            self.filename.unlink()
-            
+            self.filename.unlink(missing_ok=True)
+            self.write_template()
+            self.save(not_saved)
+            self.cover_letters = self.list()
+
         return not_saved
+
+    def save(self, cover_letters: List[CoverLetter]):
+        wb = load_workbook(self.filename)
+        sheet = wb[self.sheet_name]
+        row = sheet.max_row + 1
+        for cover_letter in cover_letters:
+            for col, attribute_name in self.column_mapping.items():
+                value = getattr(cover_letter, attribute_name)
+                sheet.cell(row=row, column=col, value=value)
+            row += 1
+        wb.save(self.filename)
