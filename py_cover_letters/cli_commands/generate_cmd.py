@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from .. import CURRENT_CONFIGURATION
 from ..constants import EXCEL_FILE, SQLITE_FILE, DEFAULT_OUTPUT_FOLDER, DEFAULT_TEMPLATE
 from ..db.excel import ExcelCoverLetterManager
 from ..db.sqlite import CoverLetterManager

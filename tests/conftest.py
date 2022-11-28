@@ -22,7 +22,7 @@ def fixtures_folder():
 
 @pytest.fixture(scope='function')
 def testing_database_file(output_folder):
-    filename = output_folder / 'temp_cover_letters.sqlite'
+    filename = output_folder / 'test_cover_letters.sqlite'
     yield filename
     filename.unlink(missing_ok=True)
 
