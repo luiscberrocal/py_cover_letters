@@ -10,11 +10,13 @@ from ..utils import backup_excel  # type: ignore
 
 def synchronize_to_excel(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterManager,
                          all_cover_letters: bool = False):
+    backup_file = None
     cover_letter_xlsx = excel_manager.filename
-    backup_file = backup_excel(cover_letter_xlsx)
-    if not backup_file.exists():
-        error_message = f'Backup file was not created. Cannot overwrite {cover_letter_xlsx}'
-        raise CoverLetterException(error_message)
+    if cover_letter_xlsx.exists():
+        backup_file = backup_excel(cover_letter_xlsx)
+        if not backup_file.exists():
+            error_message = f'Backup file was not created. Cannot overwrite {cover_letter_xlsx}'
+            raise CoverLetterException(error_message)
     cover_letter_xlsx.unlink(missing_ok=True)
     if all_cover_letters:
         cover_letters = db_manager.list()
@@ -40,7 +42,7 @@ def synchronize_to_db(excel_manager: ExcelCoverLetterManager, db_manager: CoverL
         else:
             db_cover_letter = db_manager.get(cover_letter.id)
             if db_cover_letter is None:
-                errors_list.append({'error': 'Not found', 'cover_letter': cover_letter.dict() })
+                errors_list.append({'error': 'Not found', 'cover_letter': cover_letter.dict()})
             else:
                 if db_cover_letter != cover_letter:
                     if delete and db_cover_letter.delete:

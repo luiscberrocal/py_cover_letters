@@ -29,6 +29,7 @@ class CoverLetterManager:
             return db_project
         except NoResultFound:
             return None
+
     def create(self, cover_letter: CoverLetter):
         with Session(self.engine) as session:
             session.add(cover_letter)
@@ -55,7 +56,6 @@ class CoverLetterManager:
             for key, value in project_dict.items():
                 if key not in exclude:
                     setattr(db_project, key, value)
-            # db_project.jira = 'RRR'
             session.add(db_project)
             session.commit()
             session.refresh(db_project)
@@ -77,3 +77,4 @@ class CoverLetterManager:
                 raise UnsupportedOperationException(error_message)
             cover_letters = session.exec(statement).all()
             return cover_letters
+
