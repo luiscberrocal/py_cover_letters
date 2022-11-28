@@ -70,6 +70,13 @@ class ConfigurationManager:
                 }
         return data
 
+    def prep_config(self):
+        config = self.get_configuration_obj()
+        folder = Path(config.database.folder)
+        folder.mkdir(exist_ok=True)
+        folder = Path(config.database.backup_folder)
+        folder.mkdir(exist_ok=True)
+
     def write_configuration(self, config_data: Dict[str, Any], over_write: bool = False,
                             is_sample: bool=False) -> None:
         if self.config_file.exists() and not over_write:
