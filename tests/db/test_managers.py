@@ -12,8 +12,8 @@ def test_update_not_saved(fixtures_folder, output_folder):
 
     manager = ExcelManager(output_file, backup_folder=output_folder / 'backups')
 
-    updated = manager.update_not_saved()
+    updated = manager.set_unique_ids()
     assert len(updated) == 50
 
-    updated = manager.update_not_saved()
+    updated = manager.set_unique_ids()
     assert len(updated) == 0

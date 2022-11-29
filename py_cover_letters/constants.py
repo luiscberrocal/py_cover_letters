@@ -25,3 +25,4 @@ EXCEL_FILE = Path(CURRENT_CONFIGURATION['database']['folder']) / CURRENT_CONFIGU
 DEFAULT_OUTPUT_FOLDER = Path(CURRENT_CONFIGURATION['cover_letters']['default_output_folder'])
 DEFAULT_TEMPLATE = Path(CURRENT_CONFIGURATION['cover_letters']['template_folder']) / \
                    CURRENT_CONFIGURATION['cover_letters']['default_template']
+DEFAULT_DB_BACKUP_FOLDER = Path(CURRENT_CONFIGURATION['database']['backup_folder'])

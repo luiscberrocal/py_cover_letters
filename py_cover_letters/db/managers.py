@@ -1,14 +1,14 @@
 import uuid
 from pathlib import Path
-from typing import Protocol, List, Optional, Dict
+from typing import Protocol, List, Optional, Dict, Union
 
 from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
 
 from py_cover_letters.db.models import CoverLetter
-from py_cover_letters.constants import COLUMN_MAPPING, SHEET_NAME
+from py_cover_letters.constants import COLUMN_MAPPING, SHEET_NAME, DEFAULT_DB_BACKUP_FOLDER
 from py_cover_letters.enums import FilterType
-from py_cover_letters.exceptions import CoverLetterException
+from py_cover_letters.exceptions import CoverLetterException, UnsupportedOperationException
 from py_cover_letters.utils import backup_file
 
 
@@ -37,7 +37,7 @@ class ExcelManager:
     def __init__(self, filename: Path, column_mapping: Optional[Dict[int, str]] = None,
                  sheet_name: str = SHEET_NAME, backup_folder: Optional[Path] = None):
         if backup_folder is None:
-            raise Exception('xxxxx')
+            self.backup_folder = DEFAULT_DB_BACKUP_FOLDER
         else:
             self.backup_folder = backup_folder
         self.filename = filename
@@ -51,7 +51,7 @@ class ExcelManager:
         if not self.filename.exists():
             self.write_template()
         else:
-            self.cover_letters = self.list()
+            self.cover_letters = self.load()
 
     def write_template(self):
         if self.filename.exists():
@@ -69,7 +69,7 @@ class ExcelManager:
 
         wb.save(self.filename)
 
-    def list(self) -> List[CoverLetter]:
+    def load(self) -> List[CoverLetter]:
         cover_letters = list()
         wb = load_workbook(self.filename)
         sheet = wb[self.sheet_name]
@@ -88,7 +88,16 @@ class ExcelManager:
                 raise CoverLetterException(error_message)
         return cover_letters
 
-    def update_not_saved(self, commit=True) -> List[CoverLetter]:
+    def filter(self, filter_type: FilterType) -> List[CoverLetter]:
+        filter_result = list()
+        if filter_type == FilterType.COVER_LETTER_NOT_CREATED:
+            filter_result = [x for x in self.cover_letters if x.date_generated is None]
+        else:
+            error_message = f'Unsupported FilterType {filter_type}.'
+            raise UnsupportedOperationException(error_message)
+        return filter_result
+
+    def set_unique_ids(self, commit=True) -> List[CoverLetter]:
         not_saved = [x for x in self.cover_letters if x.id is None]
         for cover_letter in not_saved:
             cover_letter.id = uuid.uuid4().int
@@ -98,9 +107,19 @@ class ExcelManager:
             self.filename.unlink(missing_ok=True)
             self.write_template()
             self.save(not_saved)
-            self.cover_letters = self.list()
+            self.cover_letters = self.load()
 
         return not_saved
+
+    def get(self, cover_letter_id: int) -> Union[CoverLetter, None]:
+        matching = [x for x in self.cover_letters if x.id == 0]
+        if len(matching) > 1:
+            error_message = f'More than one cover letter has the same id. ' \
+                            f'Id {cover_letter_id} count ({len(matching)})'
+            raise CoverLetterException(error_message)
+        elif len(matching) == 1:
+            return matching[0]
+        return None
 
     def save(self, cover_letters: List[CoverLetter]):
         wb = load_workbook(self.filename)
