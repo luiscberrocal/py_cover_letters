@@ -26,3 +26,4 @@ clean:
 	rm -rf .tox dist site
 	rm -rf coverage.xml .coverage
 	rm -rf output/*.*
+	rm -rf output/backups/*.*

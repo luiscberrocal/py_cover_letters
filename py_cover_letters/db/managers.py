@@ -101,7 +101,7 @@ class ExcelManager:
         not_saved = [x for x in self.cover_letters if x.id is None]
         for cover_letter in not_saved:
             cover_letter.id = uuid.uuid4().int
-            print(cover_letter)
+            # print(cover_letter)
         if commit:
             backup_file(self.filename, self.backup_folder)
             self.filename.unlink(missing_ok=True)
