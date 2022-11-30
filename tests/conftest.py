@@ -1,3 +1,5 @@
+import shutil
+from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -43,6 +45,23 @@ def cover_letter_manager(testing_database_file) -> CoverLetterManager:
     for cover_letter in cover_letters:
         db_manager.create(cover_letter)
     return db_manager
+
+
+def infinite_sequence():
+    num = 0
+    while True:
+        yield num
+        num += 1
+
+
+@pytest.fixture(scope='function')
+def excel_file_without_id(output_folder, fixtures_folder):
+    excel_without_id = fixtures_folder / 'test_cover_letters_without_ids.xlsx'
+    # timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    timestamp = next(infinite_sequence())
+    excel_file = output_folder / f'{timestamp:03d}_test_cover_letters_without_ids.xlsx'
+    shutil.copy(excel_without_id, excel_file)
+    return excel_file
 
 
 libreoffice_required = pytest.mark.skipif(
