@@ -22,6 +22,11 @@ def fixtures_folder():
     return folder
 
 
+@pytest.fixture(scope='session')
+def docx_template_file(fixtures_folder):
+    template = fixtures_folder / 'templates' / 'Cover Letter Template.docx'
+    return template
+
 @pytest.fixture(scope='function')
 def testing_database_file(output_folder):
     filename = output_folder / 'test_cover_letters.sqlite'
