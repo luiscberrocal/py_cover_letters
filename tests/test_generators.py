@@ -31,9 +31,8 @@ def test_write_cover_letter(fixtures_folder, output_folder):
     assert cover_letter.exists()
 
 
-@libreoffice_required
-def test_convert_docx_to_pdf(fixtures_folder, output_folder):
-    template = fixtures_folder / 'templates' / 'Cover Letter Template.docx'
+# @libreoffice_required
+def test_convert_docx_to_pdf(docx_template_file, output_folder):
     today = datetime.today()
     context = {'date': today.strftime('%B %-d, %Y'), 'position_name': 'Jedi Knight',
                'company_name': 'Jedi Order Council'}
@@ -43,9 +42,19 @@ def test_convert_docx_to_pdf(fixtures_folder, output_folder):
     cover_letter = output_folder / docx_filename
     cover_letter.unlink(missing_ok=True)
 
-    write_docx_cover_letter(template, context, cover_letter)
+    write_docx_cover_letter(docx_template_file, context, cover_letter)
     assert cover_letter.exists()
 
-    pdf = convert_docx_to_pdf(cover_letter, output_folder)
+    pdf, errors = convert_docx_to_pdf(cover_letter, output_folder)
     assert pdf.exists()
+    assert len(errors) == 1
     pdf.unlink(missing_ok=True)
+
+
+
+def test_convert_docx_to_pdf_invalid(fixtures_folder, output_folder):
+    txt_file = fixtures_folder / 'template' / 'email_static_txt.txt'
+    pdf, errors = convert_docx_to_pdf(txt_file, output_folder)
+    assert pdf is None
+    assert len(errors) == 3
+
