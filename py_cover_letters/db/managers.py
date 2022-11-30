@@ -106,8 +106,8 @@ class ExcelManager:
             backup_file(self.filename, self.backup_folder)
             self.filename.unlink(missing_ok=True)
             self.write_template()
-            self.save(not_saved)
-            self.cover_letters = self.load()
+            self.save()
+            # self.cover_letters = self.load()
 
         return not_saved
 
@@ -121,11 +121,11 @@ class ExcelManager:
             return matching[0]
         return None
 
-    def save(self, cover_letters: List[CoverLetter]):
-        wb = load_workbook(self.filename)
+    def save(self) -> None:
+        wb: Workbook = load_workbook(self.filename)
         sheet = wb[self.sheet_name]
         row = sheet.max_row + 1
-        for cover_letter in cover_letters:
+        for cover_letter in self.cover_letters:
             for col, attribute_name in self.column_mapping.items():
                 value = getattr(cover_letter, attribute_name)
                 sheet.cell(row=row, column=col, value=value)

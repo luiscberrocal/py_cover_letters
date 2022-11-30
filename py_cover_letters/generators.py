@@ -7,7 +7,7 @@ from docxtpl import DocxTemplate
 from .utils import run_commands
 
 
-def convert_docx_to_pdf(docx_file: Path, output_folder: Optional[Path]):
+def convert_docx_to_pdf(docx_file: Path, output_folder: Optional[Path] = None):
     if output_folder is None:
         output_folder = docx_file.parent
 
@@ -39,4 +39,3 @@ def build_cover_letter_filename(output_folder: Path, template_context: Dict[str,
     base_name = f'{timestamp}_{company_name}_{position_name}.docx'
     cover_letter_file = output_folder / base_name
     return cover_letter_file
-
