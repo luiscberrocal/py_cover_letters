@@ -25,8 +25,8 @@ def run_commands(commands: List[str], encoding: str = 'utf-8') -> Tuple[List[str
 
 def backup_file(filename: Path, backup_folder: Path, add_version: bool = True) -> Path:
     if not backup_folder.is_dir():
-        error_message = f'Backup folder has to be a folder.' \
-                        f' Supplied: {backup_folder}. Type: {type(backup_folder)}'
+        error_message = f'Backup folder either is not a folder or does not exist.' \
+                        f' Supplied: {backup_folder}. Type: {type(backup_folder)} exists: {backup_folder.exists()}'
         raise CoverLetterException(error_message)
 
     datetime_format = '%Y%m%d_%H%M%S'

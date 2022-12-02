@@ -5,6 +5,7 @@ from typing import Dict, Any, Optional, Tuple, Union, List
 
 from docxtpl import DocxTemplate
 
+from .exceptions import CoverLetterException
 from .utils import run_commands
 
 
@@ -42,13 +43,15 @@ def convert_docx_to_pdf(docx_file: Path,
     return pdf, errors_list
 
 
-def write_docx_cover_letter(template_file: Path, context: Dict[str, Any], output_file: Path) -> None:
+def write_docx_cover_letter(template_file: Path, context: Dict[str, Any], output_file: Path) -> bool:
     # Open our master template
     doc = DocxTemplate(template_file)
     # Load them up
     doc.render(context)
     # Save the file with personalized filename
     doc.save(output_file)
+
+    return doc.is_saved
 
 
 def clean_filename(filename: str):
@@ -57,6 +60,9 @@ def clean_filename(filename: str):
 
 
 def build_cover_letter_filename(output_folder: Path, template_context: Dict[str, Any]) -> Path:
+    if not output_folder.exists():
+        error_message = f'Output folder {output_folder} does  not exist.'
+        raise CoverLetterException(error_message)
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     company_name = clean_filename(template_context['company_name'])
     position_name = clean_filename(template_context['position_name'])
