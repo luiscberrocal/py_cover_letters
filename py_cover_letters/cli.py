@@ -31,7 +31,7 @@ main.add_command(config)
 main.add_command(create)
 main.add_command(email)
 main.add_command(do_about)
-main.add_command(do_sync)
+# main.add_command(do_sync)
 
 if __name__ == "__main__":
     main()  # pragma: no cover
