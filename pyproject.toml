@@ -1,9 +1,9 @@
 [tool]
 [tool.poetry]
 name = "py-cover-letters"
-version = "0.2.0"
+version = "0.3.0"
 homepage = "https://github.com/luiscberrocal/py-cover-letters"
-description = "Project to create, manage and email cover letters.."
+description = "Project to create, manage and email cover letters."
 authors = ["Luis C. Berrocal <luis.berrocal.1942@gmail.com>"]
 readme = "README.md"
 license =  "MIT"
@@ -13,11 +13,11 @@ classifiers=[
     'License :: OSI Approved :: MIT License',
     'Natural Language :: English',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
 ]
+include = ['templates/*.docx']
 packages = [
     { include = "py_cover_letters" },
     { include = "tests", format = "sdist" },
@@ -41,6 +41,7 @@ flake8 = "^5.0.4"
 flake8-docstrings = "^1.6.0"
 factory-boy = "^3.2.1"
 pytz = "^2022.6"
+pytest-mock = "^3.10.0"
 
 
 [tool.poetry.group.doc.dependencies]

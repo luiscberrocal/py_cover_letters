@@ -1,97 +1,133 @@
+import uuid
 from pathlib import Path
+from typing import Protocol, List, Optional, Dict, Union
 
-from sqlmodel import create_engine, SQLModel, Session, select
+from openpyxl.reader.excel import load_workbook
+from openpyxl.workbook import Workbook
 
-from .excel import ExcelCoverLetterManager
-from .models import CoverLetter
-from ..enums import FilterType
-from ..exceptions import UnsupportedOperationException
+from py_cover_letters.db.models import CoverLetter
+from py_cover_letters.constants import COLUMN_MAPPING, SHEET_NAME, DEFAULT_DB_BACKUP_FOLDER
+from py_cover_letters.enums import FilterType
+from py_cover_letters.exceptions import CoverLetterException, UnsupportedOperationException
+from py_cover_letters.utils import backup_file
 
 
-class CoverLetterManager:
-
-    def __init__(self, sql_file: Path):
-        self.engine = create_engine(f'sqlite:///{sql_file}')
-        SQLModel.metadata.create_all(self.engine)  # , tables=[CoverLetter])
-
-    def _exec(self, statement):
-        with Session(self.engine) as session:
-            project_result = session.exec(statement)
-
-            return project_result
+class CoverLetterManager(Protocol):
 
     def get(self, cover_letter_id: int) -> CoverLetter:
-        with Session(self.engine) as session:
-            statement = select(CoverLetter).where(CoverLetter.id == cover_letter_id)
-            results = session.exec(statement)
-            db_project = results.one()
-        return db_project
+        ...
 
-    def create(self, cover_letter: CoverLetter):
-        with Session(self.engine) as session:
-            session.add(cover_letter)
-            session.commit()
-            session.refresh(cover_letter)
-        return cover_letter
+    def create(self, cover_letter: CoverLetter) -> CoverLetter:
+        ...
 
-    def delete(self, cover_letter: CoverLetter):
-        with Session(self.engine) as session:
-            statement = select(CoverLetter).where(CoverLetter.id == cover_letter.id)
-            results = session.exec(statement)
-            db_project = results.one()
-            session.delete(db_project)
-            session.commit()
-        return cover_letter
+    def delete(self, cover_letter: CoverLetter) -> bool:
+        ...
 
-    def update(self, project: CoverLetter):
-        with Session(self.engine) as session:
-            statement = select(CoverLetter).where(CoverLetter.id == project.id)
-            results = session.exec(statement)
-            db_project = results.one()
-            exclude = ['id', 'created']
-            project_dict = project.dict()
-            for key, value in project_dict.items():
-                if key not in exclude:
-                    setattr(db_project, key, value)
-            # db_project.jira = 'RRR'
-            session.add(db_project)
-            session.commit()
-            session.refresh(db_project)
+    def update(self, project: CoverLetter) -> CoverLetter:
+        ...
 
-    def list(self):
-        with Session(self.engine) as session:
-            statement = select(CoverLetter)
-            projects = session.exec(statement).all()
-            return projects
+    def list(self) -> List[CoverLetter]:
+        ...
 
-    def filter(self, filter_type: FilterType):
-        with Session(self.engine) as session:
-            if filter_type == FilterType.COVER_LETTER_NOT_CREATED:
-                statement = select(CoverLetter).where(CoverLetter.date_generated is None)
-            else:
-                error_message = f'Filter type {filter_type} is not currently supported.'
-                raise UnsupportedOperationException(error_message)
-            projects = session.exec(statement).all()
-            return projects
+    def filter(self, filter_type: FilterType) -> List[CoverLetter]:
+        ...
 
 
-def synchronize_to_db(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterManager,
-                      delete: bool = False):
-    excel_cover_letters = excel_manager.read()
-    updated_list = list()
-    deleted_list = list()
-    created_list = list()
-    for cover_letter in excel_cover_letters:
-        if cover_letter.id is None:
-            db_manager.create(cover_letter)
-            created_list.append(cover_letter)
+class ExcelManager:
+    def __init__(self, filename: Path, column_mapping: Optional[Dict[int, str]] = None,
+                 sheet_name: str = SHEET_NAME, backup_folder: Optional[Path] = None):
+        if backup_folder is None:
+            self.backup_folder = DEFAULT_DB_BACKUP_FOLDER
         else:
-            db_cover_letter = db_manager.get(cover_letter.id)
-            if db_cover_letter != cover_letter:
-                if delete and db_cover_letter.delete:
-                    db_manager.delete(cover_letter)
-                    deleted_list.append(cover_letter)
-                else:
-                    db_manager.update(cover_letter)
-                    updated_list.append(cover_letter)
-    return created_list, updated_list, deleted_list
+            self.backup_folder = backup_folder
+        self.filename = filename
+        if column_mapping is None:
+            self.column_mapping = COLUMN_MAPPING
+        else:
+            self.column_mapping = column_mapping
+        self.sheet_name = sheet_name
+        self.columns = [col_name for _, col_name in self.column_mapping.items()]
+        self.cover_letters: List[CoverLetter] = list()
+        if not self.filename.exists():
+            self.write_template()
+        else:
+            self.cover_letters = self.load()
+
+    def write_template(self):
+        if self.filename.exists():
+            error_msg = f'Cannot overwrite template {self.filename}'
+            raise CoverLetterException(error_msg)
+
+        wb = Workbook()
+        sheet = wb.create_sheet(self.sheet_name, 0)
+        row = 1
+        col = 1
+        for column_name in self.columns:
+            sheet.cell(row=row, column=col, value=column_name)
+            col += 1
+        row += 1
+
+        wb.save(self.filename)
+
+    def load(self) -> List[CoverLetter]:
+        cover_letters = list()
+        wb = load_workbook(self.filename)
+        sheet = wb[self.sheet_name]
+        last_row = sheet.max_row + 1
+        for row in range(2, last_row):
+            cover_letter_dict = dict()
+            for col, name in self.column_mapping.items():
+                cell_obj = sheet.cell(row=row, column=col)
+                value = cell_obj.value
+                cover_letter_dict[name] = value
+            try:
+                cover_letter = CoverLetter(**cover_letter_dict)
+                cover_letters.append(cover_letter)
+            except Exception as e:
+                error_message = f'Unexpected error on row {row}. Type: {e.__class__.__name__} Error: {e}'
+                raise CoverLetterException(error_message)
+        return cover_letters
+
+    def filter(self, filter_type: FilterType) -> List[CoverLetter]:
+        filter_result = list()
+        if filter_type == FilterType.COVER_LETTER_NOT_CREATED:
+            filter_result = [x for x in self.cover_letters if x.date_generated is None]
+        else:
+            error_message = f'Unsupported FilterType {filter_type}.'
+            raise UnsupportedOperationException(error_message)
+        return filter_result
+
+    def set_unique_ids(self, commit=True) -> List[CoverLetter]:
+        not_saved = [x for x in self.cover_letters if x.id is None]
+        for cover_letter in not_saved:
+            cover_letter.id = uuid.uuid4().int
+            # print(cover_letter)
+        if commit:
+            backup_file(self.filename, self.backup_folder)
+            self.filename.unlink(missing_ok=True)
+            self.write_template()
+            self.save()
+            # self.cover_letters = self.load()
+
+        return not_saved
+
+    def get(self, cover_letter_id: int) -> Union[CoverLetter, None]:
+        matching = [x for x in self.cover_letters if x.id == 0]
+        if len(matching) > 1:
+            error_message = f'More than one cover letter has the same id. ' \
+                            f'Id {cover_letter_id} count ({len(matching)})'
+            raise CoverLetterException(error_message)
+        elif len(matching) == 1:
+            return matching[0]
+        return None
+
+    def save(self) -> None:
+        wb: Workbook = load_workbook(self.filename)
+        sheet = wb[self.sheet_name]
+        row = sheet.max_row + 1
+        for cover_letter in self.cover_letters:
+            for col, attribute_name in self.column_mapping.items():
+                value = getattr(cover_letter, attribute_name)
+                sheet.cell(row=row, column=col, value=value)
+            row += 1
+        wb.save(self.filename)

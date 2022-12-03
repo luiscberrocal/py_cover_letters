@@ -4,3 +4,7 @@ class CoverLetterException(Exception):
 
 class UnsupportedOperationException(CoverLetterException):
     """Raise on operations not supported."""
+
+
+class ConfigurationError(CoverLetterException):
+    """Errors in the configuration"""
