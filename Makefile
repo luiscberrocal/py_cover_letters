@@ -27,3 +27,5 @@ clean:
 	rm -rf coverage.xml .coverage
 	rm -rf output/*.*
 	rm -rf output/backups/*.*
+	rm -rf output/cli_test/*.*
+	rm -rf output/cli_test/output/*.*

@@ -20,7 +20,10 @@ def do_generate(excel_file: Path, template: Optional[Path] = None) -> List[Dict[
         cover_letter_file = build_cover_letter_filename(DEFAULT_OUTPUT_FOLDER, ctx)
         write_docx_cover_letter(template, ctx, cover_letter_file)
         data['docx'] = cover_letter_file
+        data['pdf'] = {'file': None, 'errors': ['Libreoffice not installed']}
         if is_libreoffice_installed():
-            convert_docx_to_pdf(cover_letter_file)
+            pdf, errors_list = convert_docx_to_pdf(cover_letter_file)
+            data['pdf'] = {'file': pdf, 'errors': errors_list}
+
         generated.append(data)
     return generated
