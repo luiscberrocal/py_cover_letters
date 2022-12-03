@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any, List, Dict, Optional
 
-from ..constants import EXCEL_FILE, DEFAULT_OUTPUT_FOLDER, DEFAULT_TEMPLATE
+from ..constants import DEFAULT_OUTPUT_FOLDER, DEFAULT_TEMPLATE
 from ..db.managers import ExcelManager
 from ..enums import FilterType
 from ..generators import build_cover_letter_filename, write_docx_cover_letter, convert_docx_to_pdf

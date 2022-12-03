@@ -1,12 +1,11 @@
 import shutil
-from datetime import datetime
 from pathlib import Path
 
 import pytest
 
 from py_cover_letters.db.sqlite import CoverLetterManager
-from tests.factories import CoverLetterFactory
 from py_cover_letters.utils import is_libreoffice_installed
+from tests.factories import CoverLetterFactory
 
 
 @pytest.fixture(scope='session')

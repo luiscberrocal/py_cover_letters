@@ -10,6 +10,7 @@ from py_cover_letters.exceptions import CoverLetterException
 
 def run_commands(commands: List[str], encoding: str = 'utf-8') -> Tuple[List[str], List[str]]:
     """
+    Run command
     :param commands: <list> The command and parameters to run
     :param encoding: <str> Encoding for the shell
     :return: <tuple> Containing 2 lists. First one with results and the Second one with errors if any.

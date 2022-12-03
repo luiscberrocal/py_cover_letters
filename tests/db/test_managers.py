@@ -1,6 +1,3 @@
-import datetime
-import shutil
-
 from py_cover_letters.db.managers import ExcelManager
 from tests.utils import read_excel
 

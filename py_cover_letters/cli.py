@@ -5,7 +5,6 @@ import click
 from . import __version__ as current_version
 from .cli_commands.about_cmd import do_about
 from .cli_commands.configuration_cmd import config
-from .cli_commands.sync_cmd import do_sync
 
 
 @click.group()

@@ -1,8 +1,6 @@
 import re
 from datetime import datetime
-from pathlib import Path
 
-from py_cover_letters import ConfigurationManager
 from py_cover_letters.generators import write_docx_cover_letter, convert_docx_to_pdf
 from py_cover_letters.utils import get_libreoffice_version
 from tests.conftest import libreoffice_required
@@ -51,10 +49,8 @@ def test_convert_docx_to_pdf(docx_template_file, output_folder):
     pdf.unlink(missing_ok=True)
 
 
-
 def test_convert_docx_to_pdf_invalid(fixtures_folder, output_folder):
     txt_file = fixtures_folder / 'template' / 'email_static_txt.txt'
     pdf, errors = convert_docx_to_pdf(txt_file, output_folder)
     assert pdf is None
     assert len(errors) == 3
-

@@ -1,3 +1,13 @@
+define BROWSER_PYSCRIPT
+import os, webbrowser, sys
+
+from urllib.request import pathname2url
+
+webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
+endef
+export BROWSER_PYSCRIPT
+
+BROWSER := python -c "$$BROWSER_PYSCRIPT"
 sources = py_cover_letters
 
 .PHONY: test format lint unittest coverage pre-commit clean
@@ -11,11 +21,14 @@ lint:
 	flake8 $(sources) tests
 	mypy $(sources) tests
 
-unittest:
+unittest: clean
 	pytest
 
-coverage:
+cov:
 	pytest --cov=$(sources) --cov-branch --cov-report=term-missing tests
+	coverage report -m
+	coverage html
+	$(BROWSER) htmlcov/index.html
 
 pre-commit:
 	pre-commit run --all-files

@@ -78,7 +78,7 @@ class ConfigurationManager:
         folder.mkdir(exist_ok=True)
 
     def write_configuration(self, config_data: Dict[str, Any], over_write: bool = False,
-                            is_sample: bool=False) -> None:
+                            is_sample: bool = False) -> None:
         if self.config_file.exists() and not over_write:
             raise Exception('Cannot overwrite config file.')
         with open(self.config_file, 'w') as f:
