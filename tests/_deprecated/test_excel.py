@@ -1,4 +1,4 @@
-from py_cover_letters.db.excel import ExcelCoverLetterManager
+from py_cover_letters._deprecated.excel import ExcelCoverLetterManager
 from py_cover_letters.constants import COLUMN_MAPPING
 from tests.factories import CoverLetterFactory
 from tests.utils import read_excel

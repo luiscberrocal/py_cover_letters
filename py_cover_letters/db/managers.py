@@ -55,7 +55,7 @@ class ExcelManager:
 
     def write_template(self):
         if self.filename.exists():
-            error_msg = f'Cannot overwrite template {self.filename}'
+            error_msg = f'Cannot overwrite template {self.filename} with write_template method.'
             raise CoverLetterException(error_msg)
 
         wb = Workbook()

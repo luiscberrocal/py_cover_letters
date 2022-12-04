@@ -1,5 +1,5 @@
+from py_cover_letters._deprecated.excel import ExcelCoverLetterManager
 from py_cover_letters.constants import COLUMN_MAPPING
-from py_cover_letters.db.excel import ExcelCoverLetterManager
 from py_cover_letters.utils import excel_to_list
 from py_cover_letters._deprecated.sqlite import CoverLetterManager
 from py_cover_letters._deprecated.synchronizers import synchronize_to_db, synchronize_to_excel

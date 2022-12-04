@@ -1,7 +1,7 @@
 from typing import Tuple, List, Any, Dict
 
+from py_cover_letters._deprecated.excel import ExcelCoverLetterManager
 from py_cover_letters._deprecated.sqlite import CoverLetterManager
-from py_cover_letters.db.excel import ExcelCoverLetterManager
 from py_cover_letters.db.models import CoverLetter
 from py_cover_letters.enums import FilterType
 from py_cover_letters.exceptions import CoverLetterException

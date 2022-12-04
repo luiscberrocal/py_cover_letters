@@ -4,9 +4,9 @@ from typing import Dict, List, Optional
 from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
 
-from .models import CoverLetter
-from ..constants import COLUMN_MAPPING
-from ..exceptions import CoverLetterException
+from py_cover_letters.constants import COLUMN_MAPPING
+from py_cover_letters.db.models import CoverLetter
+from py_cover_letters.exceptions import CoverLetterException
 
 
 class ExcelCoverLetterManager:
