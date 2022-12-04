@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from py_cover_letters.db.sqlite import CoverLetterManager
+from py_cover_letters._deprecated.sqlite import CoverLetterManager
 from py_cover_letters.utils import is_libreoffice_installed
 from tests.factories import CoverLetterFactory
 
