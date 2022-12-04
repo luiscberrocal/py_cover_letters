@@ -1,7 +1,6 @@
 import click
 
 from py_cover_letters.config import ConfigurationManager
-from py_cover_letters.utils import backup_file
 
 
 @click.command(help='Configure the application.')

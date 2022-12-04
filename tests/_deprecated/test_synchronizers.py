@@ -1,9 +1,9 @@
-from py_cover_letters.db.excel import ExcelCoverLetterManager, excel_to_list
+from py_cover_letters._deprecated.excel import ExcelCoverLetterManager
 from py_cover_letters.constants import COLUMN_MAPPING
-from py_cover_letters.db.sqlite import CoverLetterManager
-from py_cover_letters.db.synchronizers import synchronize_to_db, synchronize_to_excel
+from py_cover_letters.utils import excel_to_list
+from py_cover_letters._deprecated.sqlite import CoverLetterManager
+from py_cover_letters._deprecated.synchronizers import synchronize_to_db, synchronize_to_excel
 from tests.factories import CoverLetterFactory
-from tests.utils import read_excel
 
 
 def test_synchronize_to_db(output_folder, testing_database_file):

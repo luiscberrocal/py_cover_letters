@@ -2,7 +2,7 @@ import inspect
 from pathlib import Path
 
 from py_cover_letters import ConfigurationManager
-from py_cover_letters.db.sqlite import CoverLetterManager
+from py_cover_letters._deprecated.sqlite import CoverLetterManager
 from py_cover_letters.enums import FilterType
 from tests.factories import CoverLetterFactory
 

@@ -1,11 +1,11 @@
 from typing import Tuple, List, Any, Dict
 
-from .excel import ExcelCoverLetterManager
-from .models import CoverLetter
-from .sqlite import CoverLetterManager
-from ..enums import FilterType
-from ..exceptions import CoverLetterException  # type: ignore
-from ..utils import backup_excel  # type: ignore
+from py_cover_letters._deprecated.excel import ExcelCoverLetterManager
+from py_cover_letters._deprecated.sqlite import CoverLetterManager
+from py_cover_letters.db.models import CoverLetter
+from py_cover_letters.enums import FilterType
+from py_cover_letters.exceptions import CoverLetterException
+from py_cover_letters.utils import backup_excel
 
 
 def synchronize_to_excel(excel_manager: ExcelCoverLetterManager, db_manager: CoverLetterManager,

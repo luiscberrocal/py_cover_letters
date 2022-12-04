@@ -3,9 +3,9 @@ from pathlib import Path
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import create_engine, SQLModel, Session, select
 
-from .models import CoverLetter
-from ..enums import FilterType  # type: ignore
-from ..exceptions import UnsupportedOperationException  # type: ignore
+from py_cover_letters.db.models import CoverLetter
+from py_cover_letters.enums import FilterType
+from py_cover_letters.exceptions import UnsupportedOperationException
 
 
 class CoverLetterManager:
