@@ -11,6 +11,19 @@ BROWSER := python -c "$$BROWSER_PYSCRIPT"
 sources = py_cover_letters
 
 .PHONY: test format lint unittest coverage pre-commit clean
+clean-build: ## remove build artifacts
+	rm -fr build/
+	rm -fr dist/
+	rm -fr .eggs/
+	find . -name '*.egg-info' -exec rm -fr {} +
+	find . -name '*.egg' -exec rm -f {} +
+
+clean-pyc: ## remove Python file artifacts
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -fr {} +
+
 test: lint unittest
 
 format:
@@ -33,7 +46,7 @@ cov:
 pre-commit:
 	pre-commit run --all-files
 
-clean:
+clean-cache:
 	rm -rf .mypy_cache .pytest_cache
 	rm -rf *.egg-info
 	rm -rf .tox dist site
@@ -42,3 +55,11 @@ clean:
 	rm -rf output/backups/*.*
 	rm -rf output/cli_test/*.*
 	rm -rf output/cli_test/output/*.*
+
+clean: clean-build clean-pyc clean-cache
+
+dist: clean
+	poetry build
+
+release: dist ## package and upload a release
+	twine upload dist/*
