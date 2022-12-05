@@ -1,6 +1,6 @@
 import uuid
 from pathlib import Path
-from typing import Protocol, List, Optional, Dict, Union
+from typing import Protocol, List, Optional, Dict, Union, Tuple
 
 from openpyxl.reader.excel import load_workbook
 from openpyxl.workbook import Workbook
@@ -89,7 +89,6 @@ class ExcelManager:
         return cover_letters
 
     def filter(self, filter_type: FilterType) -> List[CoverLetter]:
-        filter_result = list()
         if filter_type == FilterType.COVER_LETTER_NOT_CREATED:
             filter_result = [x for x in self.cover_letters if x.date_generated is None]
         else:
@@ -103,25 +102,51 @@ class ExcelManager:
             cover_letter.id = uuid.uuid4().int
             # print(cover_letter)
         if commit:
-            backup_file(self.filename, self.backup_folder)
-            self.filename.unlink(missing_ok=True)
-            self.write_template()
             self.save()
             # self.cover_letters = self.load()
 
         return not_saved
 
-    def get(self, cover_letter_id: int) -> Union[CoverLetter, None]:
-        matching = [x for x in self.cover_letters if x.id == 0]
+    def add(self, cover_letters: List[CoverLetter]):
+        for cover_letter in cover_letters:
+            if cover_letter.id is None:
+                cover_letter.id = uuid.uuid4().int
+                self.cover_letters.append(cover_letter)
+            else:
+                error_message = 'Cannot add a cover letter with an id.'
+                raise CoverLetterException(error_message)
+        self.save()
+
+    def get(self, cover_letter_id: int) -> Tuple[int, Union[CoverLetter, None]]:
+        matching = list()
+        for i, cover_letter in enumerate(self.cover_letters):
+            if cover_letter.id == cover_letter_id:
+                matching.append((i, cover_letter))
+
         if len(matching) > 1:
             error_message = f'More than one cover letter has the same id. ' \
                             f'Id {cover_letter_id} count ({len(matching)})'
             raise CoverLetterException(error_message)
         elif len(matching) == 1:
             return matching[0]
-        return None
+        return -1, None
+
+    def update(self, cover_letters: List[CoverLetter], commit: bool = True) -> int:
+        updated = 0
+        for cover_letter in cover_letters:
+            pos, cover_letter_to_update = self.get(cover_letter_id=cover_letter.id)
+            if cover_letter_to_update is not None:
+                self.cover_letters[pos] = cover_letter
+                updated += 1
+        if commit:
+            self.save()
+        return updated
 
     def save(self) -> None:
+        backup_file(self.filename, self.backup_folder)
+        self.filename.unlink(missing_ok=True)
+        self.write_template()
+
         wb: Workbook = load_workbook(self.filename)
         sheet = wb[self.sheet_name]
         row = sheet.max_row + 1
